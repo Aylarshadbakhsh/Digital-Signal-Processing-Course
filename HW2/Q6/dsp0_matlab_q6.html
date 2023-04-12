@@ -1,0 +1,304 @@
+
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   <!--
+This HTML was auto-generated from MATLAB code.
+To make changes, update the MATLAB code and republish this document.
+      --><title>dsp0_matlab_q6</title><meta name="generator" content="MATLAB 9.11"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2021-12-17"><meta name="DC.source" content="dsp0_matlab_q6.m"><style type="text/css">
+html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
+
+html { min-height:100%; margin-bottom:1px; }
+html body { height:100%; margin:0px; font-family:Arial, Helvetica, sans-serif; font-size:10px; color:#000; line-height:140%; background:#fff none; overflow-y:scroll; }
+html body td { vertical-align:top; text-align:left; }
+
+h1 { padding:0px; margin:0px 0px 25px; font-family:Arial, Helvetica, sans-serif; font-size:1.5em; color:#d55000; line-height:100%; font-weight:normal; }
+h2 { padding:0px; margin:0px 0px 8px; font-family:Arial, Helvetica, sans-serif; font-size:1.2em; color:#000; font-weight:bold; line-height:140%; border-bottom:1px solid #d6d4d4; display:block; }
+h3 { padding:0px; margin:0px 0px 5px; font-family:Arial, Helvetica, sans-serif; font-size:1.1em; color:#000; font-weight:bold; line-height:140%; }
+
+a { color:#005fce; text-decoration:none; }
+a:hover { color:#005fce; text-decoration:underline; }
+a:visited { color:#004aa0; text-decoration:none; }
+
+p { padding:0px; margin:0px 0px 20px; }
+img { padding:0px; margin:0px 0px 20px; border:none; }
+p img, pre img, tt img, li img, h1 img, h2 img { margin-bottom:0px; }
+
+ul { padding:0px; margin:0px 0px 20px 23px; list-style:square; }
+ul li { padding:0px; margin:0px 0px 7px 0px; }
+ul li ul { padding:5px 0px 0px; margin:0px 0px 7px 23px; }
+ul li ol li { list-style:decimal; }
+ol { padding:0px; margin:0px 0px 20px 0px; list-style:decimal; }
+ol li { padding:0px; margin:0px 0px 7px 23px; list-style-type:decimal; }
+ol li ol { padding:5px 0px 0px; margin:0px 0px 7px 0px; }
+ol li ol li { list-style-type:lower-alpha; }
+ol li ul { padding-top:7px; }
+ol li ul li { list-style:square; }
+
+.content { font-size:1.2em; line-height:140%; padding: 20px; }
+
+pre, code { font-size:12px; }
+tt { font-size: 1.2em; }
+pre { margin:0px 0px 20px; }
+pre.codeinput { padding:10px; border:1px solid #d3d3d3; background:#f7f7f7; }
+pre.codeoutput { padding:10px 11px; margin:0px 0px 20px; color:#4c4c4c; }
+pre.error { color:red; }
+
+@media print { pre.codeinput, pre.codeoutput { word-wrap:break-word; width:100%; } }
+
+span.keyword { color:#0000FF }
+span.comment { color:#228B22 }
+span.string { color:#A020F0 }
+span.untermstring { color:#B20000 }
+span.syscmd { color:#B28C00 }
+span.typesection { color:#A0522D }
+
+.footer { width:auto; padding:10px 0px; margin:25px 0px 0px; border-top:1px dotted #878787; font-size:0.8em; line-height:140%; font-style:italic; color:#878787; text-align:left; float:none; }
+.footer p { margin:0px; }
+.footer a { color:#878787; }
+.footer a:hover { color:#878787; text-decoration:underline; }
+.footer a:visited { color:#878787; }
+
+table th { padding:7px 5px; text-align:left; vertical-align:middle; border: 1px solid #d6d4d4; font-weight:bold; }
+table td { padding:7px 5px; text-align:left; vertical-align:top; border:1px solid #d6d4d4; }
+
+
+
+
+
+  </style></head><body><div class="content"><h2>Contents</h2><div><ul><li><a href="#1">clear recent data</a></li><li><a href="#2">audioread</a></li><li><a href="#3">frequency response of channal</a></li><li><a href="#4">pole-zero locations of the channel system</a></li><li><a href="#5">frequency response of input audio</a></li><li><a href="#6">distorted signal</a></li><li><a href="#7">equalizer</a></li><li><a href="#8">frequency response of overall system</a></li><li><a href="#9">quantize the coefficients of the equalizer</a></li><li><a href="#10">quantization function</a></li></ul></div><h2 id="1">clear recent data</h2><pre class="codeinput">clear,clc,close <span class="string">all</span>
+</pre><h2 id="2">audioread</h2><pre class="codeinput">[x_m,fs_m] = audioread(<span class="string">'HW1_Q4_voice.wav'</span>);
+time_m = 0:1/fs_m:length(x_m)/fs_m-1/fs_m;
+</pre><h2 id="3">frequency response of channal</h2><pre class="codeinput">load(<span class="string">'a.mat'</span>);
+load(<span class="string">'b.mat'</span>);
+[h ,w]=freqz(b,a,-2*pi:1/100:2*pi);
+figure()
+subplot(2,1,1)
+plot(w/pi,abs(h))
+title(<span class="string">'frequency response of channal'</span>)
+xlabel(<span class="string">'frequency *pi rad/sample'</span>)
+ylabel(<span class="string">'magnitude'</span>)
+subplot(2,1,2)
+plot(w/pi,phase(h))
+xlabel(<span class="string">'frequency *pi rad/sample'</span>)
+ylabel(<span class="string">'phase'</span>)
+</pre><img vspace="5" hspace="5" src="dsp0_matlab_q6_01.png" alt=""> <h2 id="4">pole-zero locations of the channel system</h2><pre class="codeinput">figure()
+zplane(b,a)
+title(<span class="string">'zplane of the channal'</span>)
+</pre><img vspace="5" hspace="5" src="dsp0_matlab_q6_02.png" alt=""> <h2 id="5">frequency response of input audio</h2><pre class="codeinput">xmfft=fft(x_m);
+f1=linspace(-fs_m/2,fs_m/2,length(x_m));
+figure()
+subplot(2,1,1)
+plot(f1,abs(xmfft))
+title(<span class="string">'freqeuncy response of input audio'</span>)
+xlabel(<span class="string">'frequency'</span>)
+ylabel(<span class="string">'magnitude'</span>)
+subplot(2,1,2)
+plot(f1,angle(xmfft))
+xlabel(<span class="string">'frequency'</span>)
+ylabel(<span class="string">'phase'</span>)
+</pre><img vspace="5" hspace="5" src="dsp0_matlab_q6_03.png" alt=""> <h2 id="6">distorted signal</h2><pre class="codeinput">Xh1=filter(b,a,x_m);
+xh1fft=fft(Xh1);
+figure()
+subplot(2,1,1)
+plot(f1,abs(xh1fft))
+xlabel(<span class="string">'frequency'</span>)
+ylabel(<span class="string">'magnitude'</span>)
+title(<span class="string">'frequency response of distorted signal'</span>)
+subplot(2,1,2)
+plot(f1,angle(xh1fft))
+xlabel(<span class="string">'frequency'</span>)
+ylabel(<span class="string">'phase'</span>)
+figure()
+plot(time_m,Xh1)
+xlabel(<span class="string">'time'</span>)
+ylabel(<span class="string">'amplitude'</span>)
+title(<span class="string">'distorted signal in time domain'</span>)
+</pre><img vspace="5" hspace="5" src="dsp0_matlab_q6_04.png" alt=""> <img vspace="5" hspace="5" src="dsp0_matlab_q6_05.png" alt=""> <h2 id="7">equalizer</h2><pre class="codeinput">zerosmin=[0.7000 + 0.7000i, 0.7000 - 0.7000i, 0.8315 + 0.3444i,0.8315 - 0.3444i,0.8982 + 0.0565i,0.8982 - 0.0565i,0-(1/1.5)*1i,1/1.5,0+(1/1.5)*1i];
+polyz=poly(zerosmin);
+gD=tf(polyz,a); <span class="comment">%taking impulse response and transforming it to S domain</span>
+f=1/gD; <span class="comment">% taking inverse of a transfer function</span>
+[num,den]=tfdata(f,<span class="string">'v'</span>); <span class="comment">% extracting numerator and denominator coefficients</span>
+[hz, wz]=freqz(num,den,-2*pi:1/100:2*pi);
+figure()
+subplot(2,1,1)
+plot(wz/pi,abs(hz))
+xlabel(<span class="string">'frequency *pi rad/sample'</span>)
+ylabel(<span class="string">'magnitude'</span>)
+title(<span class="string">'frequency response of equalizer'</span>)
+subplot(2,1,2)
+plot(wz/pi,angle(hz))
+xlabel(<span class="string">'frequency *pi rad/sample'</span>)
+ylabel(<span class="string">'phase'</span>)
+figure()
+zplane(num,den)
+title(<span class="string">'zplane of equalizer'</span>)
+</pre><img vspace="5" hspace="5" src="dsp0_matlab_q6_06.png" alt=""> <img vspace="5" hspace="5" src="dsp0_matlab_q6_07.png" alt=""> <h2 id="8">frequency response of overall system</h2><pre class="codeinput">Xh=filter(num,den,Xh1); <span class="comment">% filtering</span>
+Xh=Xh(1:end);
+xhfft=fft(Xh);
+figure()
+subplot(2,1,1)
+plot(f1,abs(xhfft))
+xlabel(<span class="string">'frequency'</span>)
+ylabel(<span class="string">'magnitude'</span>)
+title(<span class="string">'frequency response of overall system'</span>)
+subplot(2,1,2)
+plot(f1,angle(xhfft))
+xlabel(<span class="string">'frequency'</span>)
+ylabel(<span class="string">'phase'</span>)
+</pre><img vspace="5" hspace="5" src="dsp0_matlab_q6_08.png" alt=""> <h2 id="9">quantize the coefficients of the equalizer</h2><pre class="codeinput">n1=4;
+[bhat1,ahat1]=quantize1(num,den,n1);
+n2=8;
+[bhat2,ahat2]=quantize1(num,den,n2);
+n3=16;
+[bhat3,ahat3]=quantize1(num,den,n3);
+n4=32;
+[bhat4,ahat4]=quantize1(num,den,n4);
+figure()
+subplot(2,2,1)
+zplane(bhat1,ahat1)
+title(<span class="string">'4 bits'</span>)
+subplot(2,2,2)
+zplane(bhat2,ahat2)
+title(<span class="string">'8 bits'</span>)
+subplot(2,2,3)
+zplane(bhat3,ahat3)
+title(<span class="string">'16 bits'</span>)
+subplot(2,2,4)
+zplane(bhat4,ahat4)
+title(<span class="string">'32 bits'</span>)
+</pre><h2 id="10">quantization function</h2><pre class="codeinput"><span class="keyword">function</span> [bhat,ahat]=quantize1(num,den,n)
+nonfraca = fix(log2(max(abs(den(1:end)))));
+nonfracb = fix(log2(max(abs(num))));
+qa = n-nonfraca; <span class="comment">% fractional bits for denominator</span>
+qb = n-nonfracb;
+ahat = fix(den*2^qa)/2^qa; <span class="comment">% quantized denominator</span>
+bhat = fix(num*2^qb)/2^qb; <span class="comment">% quantized numerator</span>
+<span class="keyword">end</span>
+</pre><img vspace="5" hspace="5" src="dsp0_matlab_q6_09.png" alt=""> <p class="footer"><br><a href="https://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2021b</a><br></p></div><!--
+##### SOURCE BEGIN #####
+%% clear recent data 
+clear,clc,close all
+%% audioread
+[x_m,fs_m] = audioread('HW1_Q4_voice.wav');
+time_m = 0:1/fs_m:length(x_m)/fs_m-1/fs_m;
+%% frequency response of channal
+load('a.mat');
+load('b.mat');
+[h ,w]=freqz(b,a,-2*pi:1/100:2*pi);
+figure()
+subplot(2,1,1)
+plot(w/pi,abs(h))
+title('frequency response of channal')
+xlabel('frequency *pi rad/sample')
+ylabel('magnitude')
+subplot(2,1,2)
+plot(w/pi,phase(h))
+xlabel('frequency *pi rad/sample')
+ylabel('phase')
+%% pole-zero locations of the channel system
+figure()
+zplane(b,a)
+title('zplane of the channal')
+%% frequency response of input audio
+xmfft=fft(x_m);
+f1=linspace(-fs_m/2,fs_m/2,length(x_m));
+figure()
+subplot(2,1,1)
+plot(f1,abs(xmfft))
+title('freqeuncy response of input audio')
+xlabel('frequency')
+ylabel('magnitude')
+subplot(2,1,2)
+plot(f1,angle(xmfft))
+xlabel('frequency')
+ylabel('phase')
+%% distorted signal
+Xh1=filter(b,a,x_m);
+xh1fft=fft(Xh1);
+figure()
+subplot(2,1,1)
+plot(f1,abs(xh1fft))
+xlabel('frequency')
+ylabel('magnitude')
+title('frequency response of distorted signal')
+subplot(2,1,2)
+plot(f1,angle(xh1fft))
+xlabel('frequency')
+ylabel('phase')
+figure()
+plot(time_m,Xh1)
+xlabel('time')
+ylabel('amplitude')
+title('distorted signal in time domain')
+%% equalizer 
+zerosmin=[0.7000 + 0.7000i, 0.7000 - 0.7000i, 0.8315 + 0.3444i,0.8315 - 0.3444i,0.8982 + 0.0565i,0.8982 - 0.0565i,0-(1/1.5)*1i,1/1.5,0+(1/1.5)*1i];
+polyz=poly(zerosmin);
+gD=tf(polyz,a); %taking impulse response and transforming it to S domain
+f=1/gD; % taking inverse of a transfer function
+[num,den]=tfdata(f,'v'); % extracting numerator and denominator coefficients
+[hz, wz]=freqz(num,den,-2*pi:1/100:2*pi);
+figure()
+subplot(2,1,1)
+plot(wz/pi,abs(hz))
+xlabel('frequency *pi rad/sample')
+ylabel('magnitude')
+title('frequency response of equalizer')
+subplot(2,1,2)
+plot(wz/pi,angle(hz))
+xlabel('frequency *pi rad/sample')
+ylabel('phase')
+figure()
+zplane(num,den)
+title('zplane of equalizer')
+%% frequency response of overall system
+Xh=filter(num,den,Xh1); % filtering
+Xh=Xh(1:end);
+xhfft=fft(Xh);
+figure()
+subplot(2,1,1)
+plot(f1,abs(xhfft))
+xlabel('frequency')
+ylabel('magnitude')
+title('frequency response of overall system')
+subplot(2,1,2)
+plot(f1,angle(xhfft))
+xlabel('frequency')
+ylabel('phase')
+%% quantize the coefficients of the equalizer
+n1=4;
+[bhat1,ahat1]=quantize1(num,den,n1);
+n2=8;
+[bhat2,ahat2]=quantize1(num,den,n2);
+n3=16;
+[bhat3,ahat3]=quantize1(num,den,n3);
+n4=32;
+[bhat4,ahat4]=quantize1(num,den,n4);
+figure()
+subplot(2,2,1)
+zplane(bhat1,ahat1)
+title('4 bits')
+subplot(2,2,2)
+zplane(bhat2,ahat2)
+title('8 bits')
+subplot(2,2,3)
+zplane(bhat3,ahat3)
+title('16 bits')
+subplot(2,2,4)
+zplane(bhat4,ahat4)
+title('32 bits')
+%% quantization function
+function [bhat,ahat]=quantize1(num,den,n)
+nonfraca = fix(log2(max(abs(den(1:end)))));
+nonfracb = fix(log2(max(abs(num))));
+qa = n-nonfraca; % fractional bits for denominator
+qb = n-nonfracb;
+ahat = fix(den*2^qa)/2^qa; % quantized denominator
+bhat = fix(num*2^qb)/2^qb; % quantized numerator
+end
+
+
+
+##### SOURCE END #####
+--></body></html>

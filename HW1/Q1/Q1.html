@@ -1,0 +1,259 @@
+
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   <!--
+This HTML was auto-generated from MATLAB code.
+To make changes, update the MATLAB code and republish this document.
+      --><title>dspq1</title><meta name="generator" content="MATLAB 9.11"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2021-11-08"><meta name="DC.source" content="dspq1.m"><style type="text/css">
+html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
+
+html { min-height:100%; margin-bottom:1px; }
+html body { height:100%; margin:0px; font-family:Arial, Helvetica, sans-serif; font-size:10px; color:#000; line-height:140%; background:#fff none; overflow-y:scroll; }
+html body td { vertical-align:top; text-align:left; }
+
+h1 { padding:0px; margin:0px 0px 25px; font-family:Arial, Helvetica, sans-serif; font-size:1.5em; color:#d55000; line-height:100%; font-weight:normal; }
+h2 { padding:0px; margin:0px 0px 8px; font-family:Arial, Helvetica, sans-serif; font-size:1.2em; color:#000; font-weight:bold; line-height:140%; border-bottom:1px solid #d6d4d4; display:block; }
+h3 { padding:0px; margin:0px 0px 5px; font-family:Arial, Helvetica, sans-serif; font-size:1.1em; color:#000; font-weight:bold; line-height:140%; }
+
+a { color:#005fce; text-decoration:none; }
+a:hover { color:#005fce; text-decoration:underline; }
+a:visited { color:#004aa0; text-decoration:none; }
+
+p { padding:0px; margin:0px 0px 20px; }
+img { padding:0px; margin:0px 0px 20px; border:none; }
+p img, pre img, tt img, li img, h1 img, h2 img { margin-bottom:0px; }
+
+ul { padding:0px; margin:0px 0px 20px 23px; list-style:square; }
+ul li { padding:0px; margin:0px 0px 7px 0px; }
+ul li ul { padding:5px 0px 0px; margin:0px 0px 7px 23px; }
+ul li ol li { list-style:decimal; }
+ol { padding:0px; margin:0px 0px 20px 0px; list-style:decimal; }
+ol li { padding:0px; margin:0px 0px 7px 23px; list-style-type:decimal; }
+ol li ol { padding:5px 0px 0px; margin:0px 0px 7px 0px; }
+ol li ol li { list-style-type:lower-alpha; }
+ol li ul { padding-top:7px; }
+ol li ul li { list-style:square; }
+
+.content { font-size:1.2em; line-height:140%; padding: 20px; }
+
+pre, code { font-size:12px; }
+tt { font-size: 1.2em; }
+pre { margin:0px 0px 20px; }
+pre.codeinput { padding:10px; border:1px solid #d3d3d3; background:#f7f7f7; }
+pre.codeoutput { padding:10px 11px; margin:0px 0px 20px; color:#4c4c4c; }
+pre.error { color:red; }
+
+@media print { pre.codeinput, pre.codeoutput { word-wrap:break-word; width:100%; } }
+
+span.keyword { color:#0000FF }
+span.comment { color:#228B22 }
+span.string { color:#A020F0 }
+span.untermstring { color:#B20000 }
+span.syscmd { color:#B28C00 }
+span.typesection { color:#A0522D }
+
+.footer { width:auto; padding:10px 0px; margin:25px 0px 0px; border-top:1px dotted #878787; font-size:0.8em; line-height:140%; font-style:italic; color:#878787; text-align:left; float:none; }
+.footer p { margin:0px; }
+.footer a { color:#878787; }
+.footer a:hover { color:#878787; text-decoration:underline; }
+.footer a:visited { color:#878787; }
+
+table th { padding:7px 5px; text-align:left; vertical-align:middle; border: 1px solid #d6d4d4; font-weight:bold; }
+table td { padding:7px 5px; text-align:left; vertical-align:top; border:1px solid #d6d4d4; }
+
+
+
+
+
+  </style></head><body><div class="content"><h2>Contents</h2><div><ul><li><a href="#2">clear recent data</a></li><li><a href="#3">IMPULSE RESPONSE part a)</a></li><li><a href="#4">IMPULSE RESPONSE part b)</a></li><li><a href="#5">IMPULSE RESPONSE part c)</a></li><li><a href="#6">phase and magnitude using filter command</a></li><li><a href="#7">phase and magnitude using convolution</a></li><li><a href="#8">DTFT and inverse z-transform</a></li><li><a href="#9">plot poles and zeros</a></li></ul></div><pre class="codeinput"><span class="comment">%Professor: Dr. Sheikhzadeh ,Author:Ailar Shadbaksh 9723301</span>
+</pre><h2 id="2">clear recent data</h2><pre class="codeinput">clear,clc,close <span class="string">all</span>
+</pre><h2 id="3">IMPULSE RESPONSE part a)</h2><pre class="codeinput"><span class="comment">%define parameters</span>
+b1=[4.5];<span class="comment">%nominator</span>
+a1=[1 ,-0.8]; <span class="comment">%denominator</span>
+n=0:100;
+<span class="comment">%calculate impulse response</span>
+h1 = impz(b1,a1,n);
+<span class="comment">%show results in time domain</span>
+figure()
+stem(n,h1)
+title(<span class="string">'Impulse Response a'</span>);
+xlabel(<span class="string">'time'</span>);
+ylabel(<span class="string">"Amplitude"</span>)
+</pre><img vspace="5" hspace="5" src="dspq1_01.png" alt=""> <h2 id="4">IMPULSE RESPONSE part b)</h2><pre class="codeinput">b2=[0, 1,1.7];
+a2=[1,-0.2,-0.15];
+h2 = impz(b2,a2,n);
+figure()
+stem(n,h2)
+title(<span class="string">'Impulse Response b'</span>);
+xlabel(<span class="string">'time'</span>);
+ylabel(<span class="string">"Amplitude"</span>)
+</pre><img vspace="5" hspace="5" src="dspq1_02.png" alt=""> <h2 id="5">IMPULSE RESPONSE part c)</h2><pre class="codeinput">b3=[4.5,0,2.3,0,4];
+a3=1;
+h3 = impz(b3,a3,n);
+figure()
+stem(n,h3)
+title(<span class="string">'Impulse Response c'</span>);
+xlabel(<span class="string">'time'</span>);
+ylabel(<span class="string">"Amplitude"</span>)
+</pre><img vspace="5" hspace="5" src="dspq1_03.png" alt=""> <h2 id="6">phase and magnitude using filter command</h2><pre class="codeinput"><span class="comment">%difference equation b)</span>
+n=0:100;
+x= ((1/2).^n); <span class="comment">%input signal</span>
+y1 = filter(b2,a2,x);
+[ha1 ,wa1]=freqz(y1,1,-pi:pi/100:pi);
+<span class="comment">%show results in frequency domain</span>
+figure()
+subplot(2,1,1)
+plot(wa1/pi,abs(ha1))
+title(<span class="string">'DTFT y[n]'</span>)
+ylabel(<span class="string">'magnitude'</span>)
+xlabel(<span class="string">'frequency(*pi radian)'</span>)
+subplot(2,1,2)
+plot(wa1/pi,phase(ha1))
+ylabel(<span class="string">'phase'</span>)
+xlabel(<span class="string">'frequency(*pi radian)'</span>)
+</pre><img vspace="5" hspace="5" src="dspq1_04.png" alt=""> <h2 id="7">phase and magnitude using convolution</h2><pre class="codeinput"><span class="comment">%part b</span>
+y2=conv(h2,x);
+[ha2 ,wa2]=freqz(y2,1,-pi:pi/100:pi);
+figure()
+subplot(2,1,1)
+plot(wa2/pi,abs(ha2))
+title(<span class="string">'DTFT y([n]'</span>)
+ylabel(<span class="string">'magnitude'</span>)
+xlabel(<span class="string">'frequency(*pi radian)'</span>)
+subplot(2,1,2)
+plot(wa2/pi,phase(ha2))
+ylabel(<span class="string">'phase'</span>)
+xlabel(<span class="string">'frequency(*pi radian) '</span>)
+</pre><img vspace="5" hspace="5" src="dspq1_05.png" alt=""> <h2 id="8">DTFT and inverse z-transform</h2><pre class="codeinput"><span class="comment">%part c</span>
+[h2_z,w2]=freqz(h2,1,-pi:pi/100:pi);
+[x_z,wx]=freqz(x,1,-pi:pi/100:pi);
+y_z=h2_z.*x_z;
+figure()
+subplot(3,1,1)
+plot(w2/pi,abs(y_z))
+title(<span class="string">'DTFT y[n]'</span>)
+ylabel(<span class="string">'magnitude'</span>)
+xlabel(<span class="string">'frequency(*pi radian)'</span>)
+subplot(3,1,2)
+plot(w2/pi,phase(y_z))
+title(<span class="string">'DTFT y[n] '</span>)
+ylabel(<span class="string">'phase'</span>)
+xlabel(<span class="string">'frequency(*pi radian)'</span>)
+syms <span class="string">z</span>
+h2z=(z+1.7)/((z^2)-(0.2*z)-0.15);
+xz=z/(z-(1/2));
+yz=h2z.*xz;
+y=iztrans(yz);
+k=0:100;
+yn=subs(y,k);
+subplot(3,1,3)
+stem(k,yn)
+title(<span class="string">'y[n]'</span>)
+xlabel(<span class="string">'time'</span>)
+ylabel(<span class="string">'Amplitude'</span>)
+</pre><img vspace="5" hspace="5" src="dspq1_06.png" alt=""> <h2 id="9">plot poles and zeros</h2><pre class="codeinput">figure()
+zplane(b2 ,a2)
+title(<span class="string">'zplane'</span>)
+</pre><img vspace="5" hspace="5" src="dspq1_07.png" alt=""> <p class="footer"><br><a href="https://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2021b</a><br></p></div><!--
+##### SOURCE BEGIN #####
+%Professor: Dr. Sheikhzadeh ,Author:Ailar Shadbaksh 9723301
+%% clear recent data 
+clear,clc,close all
+%% IMPULSE RESPONSE part a)
+%define parameters
+b1=[4.5];%nominator
+a1=[1 ,-0.8]; %denominator
+n=0:100;
+%calculate impulse response
+h1 = impz(b1,a1,n);
+%show results in time domain
+figure()
+stem(n,h1)
+title('Impulse Response a');
+xlabel('time');
+ylabel("Amplitude")
+%% IMPULSE RESPONSE part b)
+b2=[0, 1,1.7];
+a2=[1,-0.2,-0.15];
+h2 = impz(b2,a2,n);
+figure()
+stem(n,h2)
+title('Impulse Response b');
+xlabel('time');
+ylabel("Amplitude")
+%% IMPULSE RESPONSE part c)
+b3=[4.5,0,2.3,0,4];
+a3=1;
+h3 = impz(b3,a3,n);
+figure()
+stem(n,h3)
+title('Impulse Response c');
+xlabel('time');
+ylabel("Amplitude")
+%% phase and magnitude using filter command
+%difference equation b)
+n=0:100;
+x= ((1/2).^n); %input signal
+y1 = filter(b2,a2,x);
+[ha1 ,wa1]=freqz(y1,1,-pi:pi/100:pi);
+%show results in frequency domain
+figure()
+subplot(2,1,1)
+plot(wa1/pi,abs(ha1))
+title('DTFT y[n]')
+ylabel('magnitude')
+xlabel('frequency(*pi radian)')
+subplot(2,1,2)
+plot(wa1/pi,phase(ha1))
+ylabel('phase')
+xlabel('frequency(*pi radian)')
+%% phase and magnitude using convolution
+%part b
+y2=conv(h2,x);
+[ha2 ,wa2]=freqz(y2,1,-pi:pi/100:pi);
+figure()
+subplot(2,1,1)
+plot(wa2/pi,abs(ha2))
+title('DTFT y([n]')
+ylabel('magnitude')
+xlabel('frequency(*pi radian)')
+subplot(2,1,2)
+plot(wa2/pi,phase(ha2))
+ylabel('phase')
+xlabel('frequency(*pi radian) ')
+%%  DTFT and inverse z-transform
+%part c
+[h2_z,w2]=freqz(h2,1,-pi:pi/100:pi);
+[x_z,wx]=freqz(x,1,-pi:pi/100:pi);
+y_z=h2_z.*x_z;
+figure()
+subplot(3,1,1)
+plot(w2/pi,abs(y_z))
+title('DTFT y[n]')
+ylabel('magnitude')
+xlabel('frequency(*pi radian)')
+subplot(3,1,2)
+plot(w2/pi,phase(y_z))
+title('DTFT y[n] ')
+ylabel('phase')
+xlabel('frequency(*pi radian)')
+syms z 
+h2z=(z+1.7)/((z^2)-(0.2*z)-0.15);
+xz=z/(z-(1/2));
+yz=h2z.*xz;
+y=iztrans(yz);
+k=0:100;
+yn=subs(y,k);
+subplot(3,1,3)
+stem(k,yn)
+title('y[n]')
+xlabel('time')
+ylabel('Amplitude')
+%% plot poles and zeros
+figure()
+zplane(b2 ,a2)
+title('zplane')
+##### SOURCE END #####
+--></body></html>

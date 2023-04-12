@@ -1,0 +1,314 @@
+
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   <!--
+This HTML was auto-generated from MATLAB code.
+To make changes, update the MATLAB code and republish this document.
+      --><title>dsp0_matlab_q3</title><meta name="generator" content="MATLAB 9.11"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2021-12-17"><meta name="DC.source" content="dsp0_matlab_q3.m"><style type="text/css">
+html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
+
+html { min-height:100%; margin-bottom:1px; }
+html body { height:100%; margin:0px; font-family:Arial, Helvetica, sans-serif; font-size:10px; color:#000; line-height:140%; background:#fff none; overflow-y:scroll; }
+html body td { vertical-align:top; text-align:left; }
+
+h1 { padding:0px; margin:0px 0px 25px; font-family:Arial, Helvetica, sans-serif; font-size:1.5em; color:#d55000; line-height:100%; font-weight:normal; }
+h2 { padding:0px; margin:0px 0px 8px; font-family:Arial, Helvetica, sans-serif; font-size:1.2em; color:#000; font-weight:bold; line-height:140%; border-bottom:1px solid #d6d4d4; display:block; }
+h3 { padding:0px; margin:0px 0px 5px; font-family:Arial, Helvetica, sans-serif; font-size:1.1em; color:#000; font-weight:bold; line-height:140%; }
+
+a { color:#005fce; text-decoration:none; }
+a:hover { color:#005fce; text-decoration:underline; }
+a:visited { color:#004aa0; text-decoration:none; }
+
+p { padding:0px; margin:0px 0px 20px; }
+img { padding:0px; margin:0px 0px 20px; border:none; }
+p img, pre img, tt img, li img, h1 img, h2 img { margin-bottom:0px; }
+
+ul { padding:0px; margin:0px 0px 20px 23px; list-style:square; }
+ul li { padding:0px; margin:0px 0px 7px 0px; }
+ul li ul { padding:5px 0px 0px; margin:0px 0px 7px 23px; }
+ul li ol li { list-style:decimal; }
+ol { padding:0px; margin:0px 0px 20px 0px; list-style:decimal; }
+ol li { padding:0px; margin:0px 0px 7px 23px; list-style-type:decimal; }
+ol li ol { padding:5px 0px 0px; margin:0px 0px 7px 0px; }
+ol li ol li { list-style-type:lower-alpha; }
+ol li ul { padding-top:7px; }
+ol li ul li { list-style:square; }
+
+.content { font-size:1.2em; line-height:140%; padding: 20px; }
+
+pre, code { font-size:12px; }
+tt { font-size: 1.2em; }
+pre { margin:0px 0px 20px; }
+pre.codeinput { padding:10px; border:1px solid #d3d3d3; background:#f7f7f7; }
+pre.codeoutput { padding:10px 11px; margin:0px 0px 20px; color:#4c4c4c; }
+pre.error { color:red; }
+
+@media print { pre.codeinput, pre.codeoutput { word-wrap:break-word; width:100%; } }
+
+span.keyword { color:#0000FF }
+span.comment { color:#228B22 }
+span.string { color:#A020F0 }
+span.untermstring { color:#B20000 }
+span.syscmd { color:#B28C00 }
+span.typesection { color:#A0522D }
+
+.footer { width:auto; padding:10px 0px; margin:25px 0px 0px; border-top:1px dotted #878787; font-size:0.8em; line-height:140%; font-style:italic; color:#878787; text-align:left; float:none; }
+.footer p { margin:0px; }
+.footer a { color:#878787; }
+.footer a:hover { color:#878787; text-decoration:underline; }
+.footer a:visited { color:#878787; }
+
+table th { padding:7px 5px; text-align:left; vertical-align:middle; border: 1px solid #d6d4d4; font-weight:bold; }
+table td { padding:7px 5px; text-align:left; vertical-align:top; border:1px solid #d6d4d4; }
+
+
+
+
+
+  </style></head><body><div class="content"><h2>Contents</h2><div><ul><li><a href="#1">clear recent data</a></li><li><a href="#2">part 1 zeros and poles of  minimum phase and all pass system</a></li><li><a href="#3">part 1 minimum phase ,all pass,original system's phase</a></li><li><a href="#4">part 1  minimum phase ,all pass,original system's groupdelay</a></li><li><a href="#5">part 2 FIR GLP3</a></li><li><a href="#6">compensation</a></li></ul></div><h2 id="1">clear recent data</h2><pre class="codeinput">clear,clc,close <span class="string">all</span>
+</pre><h2 id="2">part 1 zeros and poles of  minimum phase and all pass system</h2><pre class="codeinput">b=[0.4*exp(1j*2*pi*-1/12),0.4*exp(1i*2*pi*1/12),1.5*exp(1j*2*pi*-1/3),1.5*exp(1j*2*pi*1/3)];
+b1=[0.4*exp(1j*2*pi*-1/12),0.4*exp(1j*2*pi*1/12),(1/1.5)*exp(1j*2*pi*-1/3),(1/1.5)*exp(1j*2*pi*1/3)];
+b2=[1.5*exp(1j*2*pi*-1/3),1.5*exp(1j*2*pi*1/3)];
+a2=[(1/1.5)*exp(1j*2*pi*-1/3),(1/1.5)*exp(1j*2*pi*1/3)];
+poly1=poly(b);
+poly2=poly(b1);
+poly3=poly(b2);
+poly4=poly(a2);
+figure()
+subplot(3,1,1)
+zplane(poly1)
+title(<span class="string">'original system'</span>)
+subplot(3,1,2)
+zplane(poly2)
+title(<span class="string">' minimum phase'</span>)
+subplot(3,1,3)
+zplane(poly3,poly4)
+title(<span class="string">' all pass'</span>)
+</pre><img vspace="5" hspace="5" src="dsp0_matlab_q3_01.png" alt=""> <h2 id="3">part 1 minimum phase ,all pass,original system's phase</h2><pre class="codeinput">[h,w]=freqz(poly1,1);
+[h1,w1]=freqz(poly2,1);
+[h2,w2]=freqz(poly3,poly4);
+figure()
+subplot(3,1,1)
+plot(w,phase(h))
+title(<span class="string">'original system'</span>)
+xlabel(<span class="string">'freqeuncy'</span>)
+ylabel(<span class="string">'phase'</span>)
+subplot(3,1,2)
+plot(w1,phase(h1))
+title(<span class="string">'minimum phase'</span>)
+xlabel(<span class="string">'freqeuncy'</span>)
+ylabel(<span class="string">'phase'</span>)
+subplot(3,1,3)
+plot(w2,phase(h2))
+title(<span class="string">'all pass'</span>)
+xlabel(<span class="string">'freqeuncy'</span>)
+ylabel(<span class="string">'phase'</span>)
+phasesum=(phase(h1))+(phase(h2));
+figure()
+subplot(2,1,1)
+plot(w/pi,phase(h))
+xlabel(<span class="string">'freqeuncy'</span>)
+ylabel(<span class="string">'phase'</span>)
+title(<span class="string">'original system '</span>)
+subplot(2,1,2)
+plot(w/pi,phasesum)
+xlabel(<span class="string">'freqeuncy'</span>)
+ylabel(<span class="string">'phase'</span>)
+title(<span class="string">'sum of all pass and minimum phase'</span>)
+</pre><img vspace="5" hspace="5" src="dsp0_matlab_q3_02.png" alt=""> <img vspace="5" hspace="5" src="dsp0_matlab_q3_03.png" alt=""> <h2 id="4">part 1  minimum phase ,all pass,original system's groupdelay</h2><pre class="codeinput">[gd,w] = grpdelay(poly1,1);
+[gd1,w1] = grpdelay(poly2,1);
+[gd2,w2] = grpdelay(poly3,poly4);
+figure()
+subplot(3,1,1)
+plot(w,gd)
+xlabel(<span class="string">'freqeuncy'</span>)
+ylabel(<span class="string">'groupdelay'</span>)
+title(<span class="string">'original system'</span>)
+subplot(3,1,2)
+plot(w1,gd1)
+xlabel(<span class="string">'freqeuncy'</span>)
+ylabel(<span class="string">'groupdelay'</span>)
+title(<span class="string">'minimum phase'</span>)
+subplot(3,1,3)
+plot(w2,gd2)
+xlabel(<span class="string">'freqeuncy'</span>)
+ylabel(<span class="string">'groupdelay'</span>)
+title(<span class="string">'all pass'</span>)
+gdsum=gd1+gd2;
+figure()
+subplot(2,1,1)
+plot(w/pi,gd,<span class="string">'r'</span>)
+xlabel(<span class="string">'freqeuncy'</span>)
+ylabel(<span class="string">'groupdelay'</span>)
+title(<span class="string">'original system'</span>)
+subplot(2,1,2)
+plot(w/pi,gdsum,<span class="string">'b'</span>)
+xlabel(<span class="string">'freqeuncy'</span>)
+ylabel(<span class="string">'groupdelay'</span>)
+title(<span class="string">'sum of minum phase and all pass '</span>)
+</pre><img vspace="5" hspace="5" src="dsp0_matlab_q3_04.png" alt=""> <img vspace="5" hspace="5" src="dsp0_matlab_q3_05.png" alt=""> <h2 id="5">part 2 FIR GLP3</h2><pre class="codeinput">zeros=[0.4*exp(1j*2*pi*-1/12),0.4*exp(1i*2*pi*1/12),1.5*exp(1j*2*pi*-1/3),1.5*exp(1j*2*pi*1/3),(1/0.4)*exp(1j*2*pi*-1/12),(1/0.4)*exp(1i*2*pi*1/12),(1/1.5)*exp(1j*2*pi*-1/3),(1/1.5)*exp(1j*2*pi*1/3),1*exp(1i*pi),1];
+bb=poly(zeros);
+minimumzeros=[0.4*exp(1j*2*pi*-1/12),0.4*exp(1i*2*pi*1/12),(1/1.5)*exp(1j*2*pi*-1/3),(1/1.5)*exp(1j*2*pi*1/3)];
+minimumpoly=poly(minimumzeros);
+maxzeros=[1.5*exp(1j*2*pi*-1/3),1.5*exp(1j*2*pi*1/3),(1/0.4)*exp(1j*2*pi*-1/12),(1/0.4)*exp(1i*2*pi*1/12)];
+maxpoly=poly(maxzeros);
+unitcirclezeros=[1*exp(1i*pi),1];
+polyunit=poly(unitcirclezeros);
+figure()
+subplot(2,2,1)
+zplane(minimumpoly)
+title(<span class="string">'minimum phase'</span>)
+subplot(2,2,2)
+zplane(maxpoly)
+title(<span class="string">'maximum phase'</span>)
+subplot(2,2,3)
+zplane(polyunit)
+title(<span class="string">'unit circle'</span>)
+subplot(2,2,4)
+zplane(bb)
+title(<span class="string">'overall system'</span>)
+</pre><img vspace="5" hspace="5" src="dsp0_matlab_q3_06.png" alt=""> <h2 id="6">compensation</h2><pre class="codeinput">[h2,w2]=freqz(maxpoly,1,0:1/1000:pi);
+[h1,w1]=freqz(minimumpoly,1,0:1/1000:pi);
+[h,w]=freqz(bb,1,0:1/1000:pi);
+h1=abs(h1);
+h1=h1.*h1;
+h1=1./h1;
+h=abs(h);
+ht=h.*h1;
+figure()
+plot(w,20*log(abs(ht)))
+xlabel(<span class="string">'frequency'</span>)
+ylabel(<span class="string">'magnitude(db)'</span>)
+title(<span class="string">'compensated'</span>)
+</pre><img vspace="5" hspace="5" src="dsp0_matlab_q3_07.png" alt=""> <p class="footer"><br><a href="https://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2021b</a><br></p></div><!--
+##### SOURCE BEGIN #####
+%% clear recent data 
+clear,clc,close all
+%% part 1 zeros and poles of  minimum phase and all pass system
+b=[0.4*exp(1j*2*pi*-1/12),0.4*exp(1i*2*pi*1/12),1.5*exp(1j*2*pi*-1/3),1.5*exp(1j*2*pi*1/3)];
+b1=[0.4*exp(1j*2*pi*-1/12),0.4*exp(1j*2*pi*1/12),(1/1.5)*exp(1j*2*pi*-1/3),(1/1.5)*exp(1j*2*pi*1/3)];
+b2=[1.5*exp(1j*2*pi*-1/3),1.5*exp(1j*2*pi*1/3)];
+a2=[(1/1.5)*exp(1j*2*pi*-1/3),(1/1.5)*exp(1j*2*pi*1/3)];
+poly1=poly(b);
+poly2=poly(b1);
+poly3=poly(b2);
+poly4=poly(a2);
+figure()
+subplot(3,1,1)
+zplane(poly1)
+title('original system')
+subplot(3,1,2)
+zplane(poly2)
+title(' minimum phase')
+subplot(3,1,3)
+zplane(poly3,poly4)
+title(' all pass')
+%% part 1 minimum phase ,all pass,original system's phase
+[h,w]=freqz(poly1,1);
+[h1,w1]=freqz(poly2,1);
+[h2,w2]=freqz(poly3,poly4);
+figure()
+subplot(3,1,1)
+plot(w,phase(h))
+title('original system')
+xlabel('freqeuncy')
+ylabel('phase')
+subplot(3,1,2)
+plot(w1,phase(h1))
+title('minimum phase')
+xlabel('freqeuncy')
+ylabel('phase')
+subplot(3,1,3)
+plot(w2,phase(h2))
+title('all pass')
+xlabel('freqeuncy')
+ylabel('phase')
+phasesum=(phase(h1))+(phase(h2));
+figure()
+subplot(2,1,1)
+plot(w/pi,phase(h))
+xlabel('freqeuncy')
+ylabel('phase')
+title('original system ')
+subplot(2,1,2)
+plot(w/pi,phasesum)
+xlabel('freqeuncy')
+ylabel('phase')
+title('sum of all pass and minimum phase')
+%% part 1  minimum phase ,all pass,original system's groupdelay
+[gd,w] = grpdelay(poly1,1);
+[gd1,w1] = grpdelay(poly2,1);
+[gd2,w2] = grpdelay(poly3,poly4);
+figure()
+subplot(3,1,1)
+plot(w,gd)
+xlabel('freqeuncy')
+ylabel('groupdelay')
+title('original system')
+subplot(3,1,2)
+plot(w1,gd1)
+xlabel('freqeuncy')
+ylabel('groupdelay')
+title('minimum phase')
+subplot(3,1,3)
+plot(w2,gd2)
+xlabel('freqeuncy')
+ylabel('groupdelay')
+title('all pass')
+gdsum=gd1+gd2;
+figure()
+subplot(2,1,1)
+plot(w/pi,gd,'r')
+xlabel('freqeuncy')
+ylabel('groupdelay')
+title('original system')
+subplot(2,1,2)
+plot(w/pi,gdsum,'b')
+xlabel('freqeuncy')
+ylabel('groupdelay')
+title('sum of minum phase and all pass ')
+%% part 2 FIR GLP3
+zeros=[0.4*exp(1j*2*pi*-1/12),0.4*exp(1i*2*pi*1/12),1.5*exp(1j*2*pi*-1/3),1.5*exp(1j*2*pi*1/3),(1/0.4)*exp(1j*2*pi*-1/12),(1/0.4)*exp(1i*2*pi*1/12),(1/1.5)*exp(1j*2*pi*-1/3),(1/1.5)*exp(1j*2*pi*1/3),1*exp(1i*pi),1];
+bb=poly(zeros);
+minimumzeros=[0.4*exp(1j*2*pi*-1/12),0.4*exp(1i*2*pi*1/12),(1/1.5)*exp(1j*2*pi*-1/3),(1/1.5)*exp(1j*2*pi*1/3)];
+minimumpoly=poly(minimumzeros);
+maxzeros=[1.5*exp(1j*2*pi*-1/3),1.5*exp(1j*2*pi*1/3),(1/0.4)*exp(1j*2*pi*-1/12),(1/0.4)*exp(1i*2*pi*1/12)];
+maxpoly=poly(maxzeros);
+unitcirclezeros=[1*exp(1i*pi),1];
+polyunit=poly(unitcirclezeros);
+figure()
+subplot(2,2,1)
+zplane(minimumpoly)
+title('minimum phase')
+subplot(2,2,2)
+zplane(maxpoly)
+title('maximum phase')
+subplot(2,2,3)
+zplane(polyunit)
+title('unit circle')
+subplot(2,2,4)
+zplane(bb)
+title('overall system')
+%% compensation
+[h2,w2]=freqz(maxpoly,1,0:1/1000:pi);
+[h1,w1]=freqz(minimumpoly,1,0:1/1000:pi);
+[h,w]=freqz(bb,1,0:1/1000:pi);
+h1=abs(h1);
+h1=h1.*h1;
+h1=1./h1;
+h=abs(h);
+ht=h.*h1;
+figure()
+plot(w,20*log(abs(ht)))
+xlabel('frequency')
+ylabel('magnitude(db)')
+title('compensated')
+
+
+
+
+
+##### SOURCE END #####
+--></body></html>

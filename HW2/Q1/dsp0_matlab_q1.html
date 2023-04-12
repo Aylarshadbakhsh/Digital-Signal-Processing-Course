@@ -1,0 +1,614 @@
+
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   <!--
+This HTML was auto-generated from MATLAB code.
+To make changes, update the MATLAB code and republish this document.
+      --><title>dsp0_matlab_q1</title><meta name="generator" content="MATLAB 9.11"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2021-12-17"><meta name="DC.source" content="dsp0_matlab_q1.m"><style type="text/css">
+html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
+
+html { min-height:100%; margin-bottom:1px; }
+html body { height:100%; margin:0px; font-family:Arial, Helvetica, sans-serif; font-size:10px; color:#000; line-height:140%; background:#fff none; overflow-y:scroll; }
+html body td { vertical-align:top; text-align:left; }
+
+h1 { padding:0px; margin:0px 0px 25px; font-family:Arial, Helvetica, sans-serif; font-size:1.5em; color:#d55000; line-height:100%; font-weight:normal; }
+h2 { padding:0px; margin:0px 0px 8px; font-family:Arial, Helvetica, sans-serif; font-size:1.2em; color:#000; font-weight:bold; line-height:140%; border-bottom:1px solid #d6d4d4; display:block; }
+h3 { padding:0px; margin:0px 0px 5px; font-family:Arial, Helvetica, sans-serif; font-size:1.1em; color:#000; font-weight:bold; line-height:140%; }
+
+a { color:#005fce; text-decoration:none; }
+a:hover { color:#005fce; text-decoration:underline; }
+a:visited { color:#004aa0; text-decoration:none; }
+
+p { padding:0px; margin:0px 0px 20px; }
+img { padding:0px; margin:0px 0px 20px; border:none; }
+p img, pre img, tt img, li img, h1 img, h2 img { margin-bottom:0px; }
+
+ul { padding:0px; margin:0px 0px 20px 23px; list-style:square; }
+ul li { padding:0px; margin:0px 0px 7px 0px; }
+ul li ul { padding:5px 0px 0px; margin:0px 0px 7px 23px; }
+ul li ol li { list-style:decimal; }
+ol { padding:0px; margin:0px 0px 20px 0px; list-style:decimal; }
+ol li { padding:0px; margin:0px 0px 7px 23px; list-style-type:decimal; }
+ol li ol { padding:5px 0px 0px; margin:0px 0px 7px 0px; }
+ol li ol li { list-style-type:lower-alpha; }
+ol li ul { padding-top:7px; }
+ol li ul li { list-style:square; }
+
+.content { font-size:1.2em; line-height:140%; padding: 20px; }
+
+pre, code { font-size:12px; }
+tt { font-size: 1.2em; }
+pre { margin:0px 0px 20px; }
+pre.codeinput { padding:10px; border:1px solid #d3d3d3; background:#f7f7f7; }
+pre.codeoutput { padding:10px 11px; margin:0px 0px 20px; color:#4c4c4c; }
+pre.error { color:red; }
+
+@media print { pre.codeinput, pre.codeoutput { word-wrap:break-word; width:100%; } }
+
+span.keyword { color:#0000FF }
+span.comment { color:#228B22 }
+span.string { color:#A020F0 }
+span.untermstring { color:#B20000 }
+span.syscmd { color:#B28C00 }
+span.typesection { color:#A0522D }
+
+.footer { width:auto; padding:10px 0px; margin:25px 0px 0px; border-top:1px dotted #878787; font-size:0.8em; line-height:140%; font-style:italic; color:#878787; text-align:left; float:none; }
+.footer p { margin:0px; }
+.footer a { color:#878787; }
+.footer a:hover { color:#878787; text-decoration:underline; }
+.footer a:visited { color:#878787; }
+
+table th { padding:7px 5px; text-align:left; vertical-align:middle; border: 1px solid #d6d4d4; font-weight:bold; }
+table td { padding:7px 5px; text-align:left; vertical-align:top; border:1px solid #d6d4d4; }
+
+
+
+
+
+  </style></head><body><div class="content"><h2>Contents</h2><div><ul><li><a href="#1">clear recent data</a></li><li><a href="#2">part A plotting signals</a></li><li><a href="#3">sampling with freqeuncy of 100HZ</a></li><li><a href="#4">part B linear interpolation</a></li><li><a href="#5">part B   sinc interpolation fs=20</a></li><li><a href="#6">part B   sinc interpolation fs=100</a></li><li><a href="#7">part B   sinc interpolation fs=300</a></li><li><a href="#8">part B   sinc interpolation fs=300 for sawtooth signal</a></li></ul></div><h2 id="1">clear recent data</h2><pre class="codeinput">clear,clc,close <span class="string">all</span>
+</pre><h2 id="2">part A plotting signals</h2><pre class="codeinput">f=10;
+t=0:1/1000:0.2;
+y1=sin(2*pi*f*t)+cos(4*pi*f*t);
+y2=sawtooth(2*pi*f*t);
+figure()
+subplot(2,1,1)
+plot(t,y1)
+xlabel(<span class="string">'time'</span>)
+ylabel(<span class="string">'amplitude'</span>)
+title(<span class="string">'sin(2*pi*10*t)+cos(4*pi*10*t)'</span>)
+subplot(2,1,2)
+plot(t,y2)
+xlabel(<span class="string">'time'</span>)
+ylabel(<span class="string">'amplitude'</span>)
+title(<span class="string">'sawtooth(2*pi*10*t)'</span>)
+</pre><img vspace="5" hspace="5" src="dsp0_matlab_q1_01.png" alt=""> <h2 id="3">sampling with freqeuncy of 100HZ</h2><pre class="codeinput">fs=100; <span class="comment">%sampling frequency in Hz</span>
+tiv=1/fs; <span class="comment">%time interval between samples;</span>
+t1=0:tiv:0.2;
+y11=sin(2*pi*f*t1)+cos(4*pi*f*t1);
+y22=sawtooth(2*pi*f*t1);
+figure()
+subplot(2,1,1)
+stem(t1,y11)
+xlabel(<span class="string">'time'</span>)
+ylabel(<span class="string">'amplitude'</span>)
+hold <span class="string">on</span>
+plot(t,y1)
+legend(<span class="string">'sampled signal '</span>,<span class="string">'continuous time signal)'</span>)
+subplot(2,1,2)
+stem(t1,y22)
+hold <span class="string">on</span>
+plot(t,y2);
+legend(<span class="string">'sampled signal '</span>,<span class="string">'continuous time signal)'</span>)
+xlabel(<span class="string">'time'</span>)
+ylabel(<span class="string">'amplitude'</span>)
+</pre><img vspace="5" hspace="5" src="dsp0_matlab_q1_02.png" alt=""> <h2 id="4">part B linear interpolation</h2><pre class="codeinput">fc = 10000; Tc = inv(fc); t = 0:Tc:0.2;
+y = sin(2*pi*10*t);
+fs = 100; Ts = inv(fs); ts = 0:Ts:0.2;
+ys1 = interp1(t,y,ts,<span class="string">"linear"</span>);
+figure()
+plot(ts,ys1)
+hold <span class="string">on</span>
+plot(t,y)
+xlabel(<span class="string">'time'</span>)
+ylabel(<span class="string">'amplitude'</span>)
+legend(<span class="string">'interpolated signal '</span>,<span class="string">'continuous time signal)'</span>)
+</pre><img vspace="5" hspace="5" src="dsp0_matlab_q1_03.png" alt=""> <h2 id="5">part B   sinc interpolation fs=20</h2><p>Create "continuous time" signal, Fc &gt;&gt; f</p><pre class="codeinput">Fc = 1e6; <span class="comment">% very high sample rate to simulate "continuous time"</span>
+Tc = 1/Fc; <span class="comment">% sampling period</span>
+t = (0:Tc:0.2)';
+f = 10; <span class="comment">% signal frequency</span>
+xc = sin(2*pi*f*t); <span class="comment">% "continuous time" signal</span>
+
+<span class="comment">% Create sampled signal</span>
+Fs = 20; <span class="comment">% sampling rate</span>
+Ts = 1/Fs; <span class="comment">% sampling period</span>
+ratio = round(Ts/Tc);
+tn = t(1:ratio:end); <span class="comment">% sampled time axis</span>
+xn = xc(1:ratio:end); <span class="comment">% sampled signal</span>
+<span class="comment">% Plot the CT signal and sampled signal</span>
+figure
+hold <span class="string">on</span>
+grid <span class="string">on</span>
+plot(t, xc)
+stem(tn, xn, <span class="string">'o'</span>)
+legend(<span class="string">'"Continuous time signal"'</span>, <span class="string">'Sampled signal'</span>)
+xlabel(<span class="string">'time'</span>)
+ylabel(<span class="string">'amplitude'</span>)
+
+<span class="comment">% Create and plot sinc train</span>
+sincTrain = zeros(length(t), length(xn));
+nind = 1;
+figure
+cmap = colormap(jet(length(0:floor(length(2*xn)))));
+ax = axes(<span class="string">'colororder'</span>, cmap);
+hold <span class="string">on</span>
+grid <span class="string">on</span>
+
+plot(t, xc, <span class="string">'k'</span>, <span class="string">'LineWidth'</span>, 3)
+xlabel(<span class="string">'time'</span>)
+ylabel(<span class="string">'amplitude'</span>)
+<span class="keyword">for</span> n = 0:floor(length(xn))-1
+   sincTrain(:, nind) = xn(nind)*sinc((t - n*Ts)/Ts);
+   p = plot(t, sincTrain(:, nind), <span class="string">'LineWidth'</span>, 2);
+   stem(tn(nind), xn(nind), <span class="string">'Color'</span>, p.Color, <span class="string">'LineWidth'</span>, 2)
+   nind = nind + 1;
+<span class="keyword">end</span>
+xlabel(<span class="string">'time'</span>)
+ylabel(<span class="string">'amplitude'</span>)
+set(gca, <span class="string">'FontSize'</span>, 20, <span class="string">'LineWidth'</span>, 3, <span class="string">'FontWeight'</span>, <span class="string">'bold'</span>)
+
+xr = sum(sincTrain, 2);
+
+figure
+hold <span class="string">on</span>
+grid <span class="string">on</span>
+plot(t, xc,<span class="string">'r'</span>)
+plot(t, xr,<span class="string">'b'</span>)
+xlabel(<span class="string">'time'</span>)
+ylabel(<span class="string">'amplitude'</span>)
+title(<span class="string">'fs=20'</span>)
+</pre><img vspace="5" hspace="5" src="dsp0_matlab_q1_04.png" alt=""> <img vspace="5" hspace="5" src="dsp0_matlab_q1_05.png" alt=""> <img vspace="5" hspace="5" src="dsp0_matlab_q1_06.png" alt=""> <h2 id="6">part B   sinc interpolation fs=100</h2><p>Create "continuous time" signal, Fc &gt;&gt; f</p><pre class="codeinput">Fc = 1e6; <span class="comment">% very high sample rate to simulate "continuous time"</span>
+Tc = 1/Fc; <span class="comment">% sampling period</span>
+t = (0:Tc:0.2)';
+f = 10; <span class="comment">% signal frequency</span>
+xc = sin(2*pi*f*t); <span class="comment">% "continuous time" signal</span>
+<span class="comment">%xc=sawtooth(2*pi*f*t);</span>
+
+<span class="comment">% Create sampled signal</span>
+Fs = 100; <span class="comment">% sampling rate</span>
+Ts = 1/Fs; <span class="comment">% sampling period</span>
+ratio = round(Ts/Tc);
+tn = t(1:ratio:end); <span class="comment">% sampled time axis</span>
+xn = xc(1:ratio:end); <span class="comment">% sampled signal</span>
+<span class="comment">% Plot the CT signal and sampled signal</span>
+figure
+hold <span class="string">on</span>
+grid <span class="string">on</span>
+plot(t, xc)
+stem(tn, xn, <span class="string">'o'</span>)
+legend(<span class="string">'"Continuous time signal"'</span>, <span class="string">'Sampled signal'</span>)
+xlabel(<span class="string">'time'</span>)
+ylabel(<span class="string">'amplitude'</span>)
+
+<span class="comment">% Create and plot sinc train</span>
+sincTrain = zeros(length(t), length(xn));
+nind = 1;
+figure
+cmap = colormap(jet(length(0:floor(length(2*xn)))));
+ax = axes(<span class="string">'colororder'</span>, cmap);
+hold <span class="string">on</span>
+grid <span class="string">on</span>
+
+plot(t, xc, <span class="string">'k'</span>, <span class="string">'LineWidth'</span>, 3)
+xlabel(<span class="string">'time'</span>)
+ylabel(<span class="string">'amplitude'</span>)
+<span class="keyword">for</span> n = 0:floor(length(xn))-1
+   sincTrain(:, nind) = xn(nind)*sinc((t - n*Ts)/Ts);
+   p = plot(t, sincTrain(:, nind), <span class="string">'LineWidth'</span>, 2);
+   stem(tn(nind), xn(nind), <span class="string">'Color'</span>, p.Color, <span class="string">'LineWidth'</span>, 2)
+   nind = nind + 1;
+<span class="keyword">end</span>
+xlabel(<span class="string">'time'</span>)
+ylabel(<span class="string">'Amplitude'</span>)
+set(gca, <span class="string">'FontSize'</span>, 20, <span class="string">'LineWidth'</span>, 3, <span class="string">'FontWeight'</span>, <span class="string">'bold'</span>)
+
+xr = sum(sincTrain, 2);
+
+figure
+hold <span class="string">on</span>
+grid <span class="string">on</span>
+plot(t, xc,<span class="string">'r'</span>)
+plot(t, xr,<span class="string">'b'</span>)
+xlabel(<span class="string">'time'</span>)
+ylabel(<span class="string">'amplitude'</span>)
+title(<span class="string">'fs=100'</span>)
+</pre><img vspace="5" hspace="5" src="dsp0_matlab_q1_07.png" alt=""> <img vspace="5" hspace="5" src="dsp0_matlab_q1_08.png" alt=""> <img vspace="5" hspace="5" src="dsp0_matlab_q1_09.png" alt=""> <h2 id="7">part B   sinc interpolation fs=300</h2><p>Create "continuous time" signal, Fc &gt;&gt; f</p><pre class="codeinput">Fc = 1e6; <span class="comment">% very high sample rate to simulate "continuous time"</span>
+Tc = 1/Fc; <span class="comment">% sampling period</span>
+t = (0:Tc:0.2)';
+f = 10; <span class="comment">% signal frequency</span>
+xc = sin(2*pi*f*t); <span class="comment">% "continuous time" signal</span>
+<span class="comment">%xc=sawtooth(2*pi*f*t);</span>
+
+<span class="comment">% Create sampled signal</span>
+Fs = 300; <span class="comment">% sampling rate</span>
+Ts = 1/Fs; <span class="comment">% sampling period</span>
+ratio = round(Ts/Tc);
+tn = t(1:ratio:end); <span class="comment">% sampled time axis</span>
+xn = xc(1:ratio:end); <span class="comment">% sampled signal</span>
+<span class="comment">% Plot the CT signal and sampled signal</span>
+figure
+hold <span class="string">on</span>
+grid <span class="string">on</span>
+plot(t, xc)
+stem(tn, xn, <span class="string">'o'</span>)
+legend(<span class="string">'"Continuous time signal"'</span>, <span class="string">'Sampled signal'</span>)
+xlabel(<span class="string">'time'</span>)
+ylabel(<span class="string">'amplitude'</span>)
+
+<span class="comment">% Create and plot sinc train</span>
+sincTrain = zeros(length(t), length(xn));
+nind = 1;
+figure
+cmap = colormap(jet(length(0:floor(length(2*xn)))));
+ax = axes(<span class="string">'colororder'</span>, cmap);
+hold <span class="string">on</span>
+grid <span class="string">on</span>
+
+plot(t, xc, <span class="string">'k'</span>, <span class="string">'LineWidth'</span>, 3)
+xlabel(<span class="string">'time'</span>)
+ylabel(<span class="string">'amplitude'</span>)
+<span class="keyword">for</span> n = 0:floor(length(xn))-1
+   sincTrain(:, nind) = xn(nind)*sinc((t - n*Ts)/Ts);
+   p = plot(t, sincTrain(:, nind), <span class="string">'LineWidth'</span>, 2);
+   stem(tn(nind), xn(nind), <span class="string">'Color'</span>, p.Color, <span class="string">'LineWidth'</span>, 2)
+   nind = nind + 1;
+<span class="keyword">end</span>
+xlabel(<span class="string">'time'</span>)
+ylabel(<span class="string">'Amplitude'</span>)
+set(gca, <span class="string">'FontSize'</span>, 20, <span class="string">'LineWidth'</span>, 3, <span class="string">'FontWeight'</span>, <span class="string">'bold'</span>)
+
+xr = sum(sincTrain, 2);
+figure
+hold <span class="string">on</span>
+grid <span class="string">on</span>
+plot(t, xc,<span class="string">'r'</span>)
+plot(t, xr,<span class="string">'b'</span>)
+xlabel(<span class="string">'time'</span>)
+ylabel(<span class="string">'amplitude'</span>)
+title(<span class="string">'fs=300'</span>)
+</pre><img vspace="5" hspace="5" src="dsp0_matlab_q1_10.png" alt=""> <img vspace="5" hspace="5" src="dsp0_matlab_q1_11.png" alt=""> <img vspace="5" hspace="5" src="dsp0_matlab_q1_12.png" alt=""> <h2 id="8">part B   sinc interpolation fs=300 for sawtooth signal</h2><pre class="codeinput">Fc = 1e6;
+Tc = 1/Fc;
+t = (0:Tc:0.2)';
+f = 10;
+xc=sawtooth(2*pi*f*t);
+
+<span class="comment">% Create sampled signal</span>
+Fs = 1000; <span class="comment">% sampling rate</span>
+Ts = 1/Fs; <span class="comment">% sampling period</span>
+ratio = round(Ts/Tc);
+tn = t(1:ratio:end); <span class="comment">% sampled time axis</span>
+xn = xc(1:ratio:end); <span class="comment">% sampled signal</span>
+<span class="comment">% Plot the CT signal and sampled signal</span>
+figure
+hold <span class="string">on</span>
+grid <span class="string">on</span>
+plot(t, xc)
+stem(tn, xn, <span class="string">'o'</span>)
+legend(<span class="string">'"Continuous time signal"'</span>, <span class="string">'Sampled signal'</span>)
+xlabel(<span class="string">'time'</span>)
+ylabel(<span class="string">'amplitude'</span>)
+
+<span class="comment">% Create and plot sinc train</span>
+sincTrain = zeros(length(t), length(xn));
+nind = 1;
+figure
+cmap = colormap(jet(length(0:floor(length(2*xn)))));
+ax = axes(<span class="string">'colororder'</span>, cmap);
+hold <span class="string">on</span>
+grid <span class="string">on</span>
+
+plot(t, xc, <span class="string">'k'</span>, <span class="string">'LineWidth'</span>, 3)
+xlabel(<span class="string">'time'</span>)
+ylabel(<span class="string">'amplitude'</span>)
+<span class="keyword">for</span> n = 0:floor(length(xn))-1
+   sincTrain(:, nind) = xn(nind)*sinc((t - n*Ts)/Ts);
+   p = plot(t, sincTrain(:, nind), <span class="string">'LineWidth'</span>, 2);
+   stem(tn(nind), xn(nind), <span class="string">'Color'</span>, p.Color, <span class="string">'LineWidth'</span>, 2)
+   nind = nind + 1;
+<span class="keyword">end</span>
+xlabel(<span class="string">'time'</span>)
+ylabel(<span class="string">'Amplitude'</span>)
+set(gca, <span class="string">'FontSize'</span>, 20, <span class="string">'LineWidth'</span>, 3, <span class="string">'FontWeight'</span>, <span class="string">'bold'</span>)
+
+xr = sum(sincTrain, 2);
+
+figure
+hold <span class="string">on</span>
+grid <span class="string">on</span>
+plot(t, xc,<span class="string">'r'</span>)
+plot(t, xr,<span class="string">'b'</span>)
+xlabel(<span class="string">'time'</span>)
+ylabel(<span class="string">'amplitude'</span>)
+title(<span class="string">'fs=300'</span>)
+</pre><img vspace="5" hspace="5" src="dsp0_matlab_q1_13.png" alt=""> <img vspace="5" hspace="5" src="dsp0_matlab_q1_14.png" alt=""> <img vspace="5" hspace="5" src="dsp0_matlab_q1_15.png" alt=""> <p class="footer"><br><a href="https://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2021b</a><br></p></div><!--
+##### SOURCE BEGIN #####
+%% clear recent data 
+clear,clc,close all
+%% part A plotting signals
+f=10;
+t=0:1/1000:0.2;
+y1=sin(2*pi*f*t)+cos(4*pi*f*t);
+y2=sawtooth(2*pi*f*t);
+figure()
+subplot(2,1,1)
+plot(t,y1)
+xlabel('time')
+ylabel('amplitude')
+title('sin(2*pi*10*t)+cos(4*pi*10*t)')
+subplot(2,1,2)
+plot(t,y2)
+xlabel('time')
+ylabel('amplitude')
+title('sawtooth(2*pi*10*t)')
+%% sampling with freqeuncy of 100HZ
+fs=100; %sampling frequency in Hz
+tiv=1/fs; %time interval between samples;
+t1=0:tiv:0.2;
+y11=sin(2*pi*f*t1)+cos(4*pi*f*t1);
+y22=sawtooth(2*pi*f*t1); 
+figure()
+subplot(2,1,1)
+stem(t1,y11)
+xlabel('time')
+ylabel('amplitude')
+hold on
+plot(t,y1)
+legend('sampled signal ','continuous time signal)')
+subplot(2,1,2)
+stem(t1,y22)
+hold on
+plot(t,y2);
+legend('sampled signal ','continuous time signal)')
+xlabel('time')
+ylabel('amplitude')
+%% part B linear interpolation
+fc = 10000; Tc = inv(fc); t = 0:Tc:0.2;
+y = sin(2*pi*10*t);
+fs = 100; Ts = inv(fs); ts = 0:Ts:0.2;   
+ys1 = interp1(t,y,ts,"linear");
+figure()
+plot(ts,ys1)
+hold on
+plot(t,y)
+xlabel('time')
+ylabel('amplitude')
+legend('interpolated signal ','continuous time signal)')
+%% part B   sinc interpolation fs=20
+% Create "continuous time" signal, Fc >> f
+Fc = 1e6; % very high sample rate to simulate "continuous time"
+Tc = 1/Fc; % sampling period
+t = (0:Tc:0.2)';
+f = 10; % signal frequency
+xc = sin(2*pi*f*t); % "continuous time" signal
+
+% Create sampled signal
+Fs = 20; % sampling rate
+Ts = 1/Fs; % sampling period
+ratio = round(Ts/Tc);
+tn = t(1:ratio:end); % sampled time axis
+xn = xc(1:ratio:end); % sampled signal
+% Plot the CT signal and sampled signal
+figure
+hold on
+grid on
+plot(t, xc)
+stem(tn, xn, 'o')
+legend('"Continuous time signal"', 'Sampled signal')
+xlabel('time')
+ylabel('amplitude')
+
+% Create and plot sinc train
+sincTrain = zeros(length(t), length(xn));
+nind = 1;
+figure
+cmap = colormap(jet(length(0:floor(length(2*xn)))));
+ax = axes('colororder', cmap);
+hold on
+grid on
+
+plot(t, xc, 'k', 'LineWidth', 3)
+xlabel('time')
+ylabel('amplitude')
+for n = 0:floor(length(xn))-1
+   sincTrain(:, nind) = xn(nind)*sinc((t - n*Ts)/Ts);
+   p = plot(t, sincTrain(:, nind), 'LineWidth', 2);
+   stem(tn(nind), xn(nind), 'Color', p.Color, 'LineWidth', 2)
+   nind = nind + 1;
+end
+xlabel('time')
+ylabel('amplitude')
+set(gca, 'FontSize', 20, 'LineWidth', 3, 'FontWeight', 'bold')
+
+xr = sum(sincTrain, 2); 
+
+figure
+hold on
+grid on
+plot(t, xc,'r')
+plot(t, xr,'b') 
+xlabel('time')
+ylabel('amplitude')
+title('fs=20')
+%% part B   sinc interpolation fs=100
+% Create "continuous time" signal, Fc >> f
+Fc = 1e6; % very high sample rate to simulate "continuous time"
+Tc = 1/Fc; % sampling period
+t = (0:Tc:0.2)';
+f = 10; % signal frequency
+xc = sin(2*pi*f*t); % "continuous time" signal
+%xc=sawtooth(2*pi*f*t);
+
+% Create sampled signal
+Fs = 100; % sampling rate
+Ts = 1/Fs; % sampling period
+ratio = round(Ts/Tc);
+tn = t(1:ratio:end); % sampled time axis
+xn = xc(1:ratio:end); % sampled signal
+% Plot the CT signal and sampled signal
+figure
+hold on
+grid on
+plot(t, xc)
+stem(tn, xn, 'o')
+legend('"Continuous time signal"', 'Sampled signal')
+xlabel('time')
+ylabel('amplitude')
+
+% Create and plot sinc train
+sincTrain = zeros(length(t), length(xn));
+nind = 1;
+figure
+cmap = colormap(jet(length(0:floor(length(2*xn)))));
+ax = axes('colororder', cmap);
+hold on
+grid on
+
+plot(t, xc, 'k', 'LineWidth', 3)
+xlabel('time')
+ylabel('amplitude')
+for n = 0:floor(length(xn))-1
+   sincTrain(:, nind) = xn(nind)*sinc((t - n*Ts)/Ts);
+   p = plot(t, sincTrain(:, nind), 'LineWidth', 2);
+   stem(tn(nind), xn(nind), 'Color', p.Color, 'LineWidth', 2)
+   nind = nind + 1;
+end
+xlabel('time')
+ylabel('Amplitude')
+set(gca, 'FontSize', 20, 'LineWidth', 3, 'FontWeight', 'bold')
+
+xr = sum(sincTrain, 2); 
+
+figure
+hold on
+grid on
+plot(t, xc,'r')
+plot(t, xr,'b') 
+xlabel('time')
+ylabel('amplitude')
+title('fs=100')
+%% part B   sinc interpolation fs=300
+% Create "continuous time" signal, Fc >> f
+Fc = 1e6; % very high sample rate to simulate "continuous time"
+Tc = 1/Fc; % sampling period
+t = (0:Tc:0.2)';
+f = 10; % signal frequency
+xc = sin(2*pi*f*t); % "continuous time" signal
+%xc=sawtooth(2*pi*f*t);
+
+% Create sampled signal
+Fs = 300; % sampling rate
+Ts = 1/Fs; % sampling period
+ratio = round(Ts/Tc);
+tn = t(1:ratio:end); % sampled time axis
+xn = xc(1:ratio:end); % sampled signal
+% Plot the CT signal and sampled signal
+figure
+hold on
+grid on
+plot(t, xc)
+stem(tn, xn, 'o')
+legend('"Continuous time signal"', 'Sampled signal')
+xlabel('time')
+ylabel('amplitude')
+
+% Create and plot sinc train
+sincTrain = zeros(length(t), length(xn));
+nind = 1;
+figure
+cmap = colormap(jet(length(0:floor(length(2*xn)))));
+ax = axes('colororder', cmap);
+hold on
+grid on
+
+plot(t, xc, 'k', 'LineWidth', 3)
+xlabel('time')
+ylabel('amplitude')
+for n = 0:floor(length(xn))-1
+   sincTrain(:, nind) = xn(nind)*sinc((t - n*Ts)/Ts);
+   p = plot(t, sincTrain(:, nind), 'LineWidth', 2);
+   stem(tn(nind), xn(nind), 'Color', p.Color, 'LineWidth', 2)
+   nind = nind + 1;
+end
+xlabel('time')
+ylabel('Amplitude')
+set(gca, 'FontSize', 20, 'LineWidth', 3, 'FontWeight', 'bold')
+
+xr = sum(sincTrain, 2); 
+figure
+hold on
+grid on
+plot(t, xc,'r')
+plot(t, xr,'b') 
+xlabel('time')
+ylabel('amplitude')
+title('fs=300')
+%% part B   sinc interpolation fs=300 for sawtooth signal
+Fc = 1e6;
+Tc = 1/Fc;
+t = (0:Tc:0.2)';
+f = 10; 
+xc=sawtooth(2*pi*f*t);
+
+% Create sampled signal
+Fs = 1000; % sampling rate
+Ts = 1/Fs; % sampling period
+ratio = round(Ts/Tc);
+tn = t(1:ratio:end); % sampled time axis
+xn = xc(1:ratio:end); % sampled signal
+% Plot the CT signal and sampled signal
+figure
+hold on
+grid on
+plot(t, xc)
+stem(tn, xn, 'o')
+legend('"Continuous time signal"', 'Sampled signal')
+xlabel('time')
+ylabel('amplitude')
+
+% Create and plot sinc train
+sincTrain = zeros(length(t), length(xn));
+nind = 1;
+figure
+cmap = colormap(jet(length(0:floor(length(2*xn)))));
+ax = axes('colororder', cmap);
+hold on
+grid on
+
+plot(t, xc, 'k', 'LineWidth', 3)
+xlabel('time')
+ylabel('amplitude')
+for n = 0:floor(length(xn))-1
+   sincTrain(:, nind) = xn(nind)*sinc((t - n*Ts)/Ts);
+   p = plot(t, sincTrain(:, nind), 'LineWidth', 2);
+   stem(tn(nind), xn(nind), 'Color', p.Color, 'LineWidth', 2)
+   nind = nind + 1;
+end
+xlabel('time')
+ylabel('Amplitude')
+set(gca, 'FontSize', 20, 'LineWidth', 3, 'FontWeight', 'bold')
+
+xr = sum(sincTrain, 2); 
+
+figure
+hold on
+grid on
+plot(t, xc,'r')
+plot(t, xr,'b') 
+xlabel('time')
+ylabel('amplitude')
+title('fs=300')
+
+
+##### SOURCE END #####
+--></body></html>

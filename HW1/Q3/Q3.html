@@ -1,0 +1,594 @@
+
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   <!--
+This HTML was auto-generated from MATLAB code.
+To make changes, update the MATLAB code and republish this document.
+      --><title>dspq3</title><meta name="generator" content="MATLAB 9.11"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2021-11-08"><meta name="DC.source" content="dspq3.m"><style type="text/css">
+html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
+
+html { min-height:100%; margin-bottom:1px; }
+html body { height:100%; margin:0px; font-family:Arial, Helvetica, sans-serif; font-size:10px; color:#000; line-height:140%; background:#fff none; overflow-y:scroll; }
+html body td { vertical-align:top; text-align:left; }
+
+h1 { padding:0px; margin:0px 0px 25px; font-family:Arial, Helvetica, sans-serif; font-size:1.5em; color:#d55000; line-height:100%; font-weight:normal; }
+h2 { padding:0px; margin:0px 0px 8px; font-family:Arial, Helvetica, sans-serif; font-size:1.2em; color:#000; font-weight:bold; line-height:140%; border-bottom:1px solid #d6d4d4; display:block; }
+h3 { padding:0px; margin:0px 0px 5px; font-family:Arial, Helvetica, sans-serif; font-size:1.1em; color:#000; font-weight:bold; line-height:140%; }
+
+a { color:#005fce; text-decoration:none; }
+a:hover { color:#005fce; text-decoration:underline; }
+a:visited { color:#004aa0; text-decoration:none; }
+
+p { padding:0px; margin:0px 0px 20px; }
+img { padding:0px; margin:0px 0px 20px; border:none; }
+p img, pre img, tt img, li img, h1 img, h2 img { margin-bottom:0px; }
+
+ul { padding:0px; margin:0px 0px 20px 23px; list-style:square; }
+ul li { padding:0px; margin:0px 0px 7px 0px; }
+ul li ul { padding:5px 0px 0px; margin:0px 0px 7px 23px; }
+ul li ol li { list-style:decimal; }
+ol { padding:0px; margin:0px 0px 20px 0px; list-style:decimal; }
+ol li { padding:0px; margin:0px 0px 7px 23px; list-style-type:decimal; }
+ol li ol { padding:5px 0px 0px; margin:0px 0px 7px 0px; }
+ol li ol li { list-style-type:lower-alpha; }
+ol li ul { padding-top:7px; }
+ol li ul li { list-style:square; }
+
+.content { font-size:1.2em; line-height:140%; padding: 20px; }
+
+pre, code { font-size:12px; }
+tt { font-size: 1.2em; }
+pre { margin:0px 0px 20px; }
+pre.codeinput { padding:10px; border:1px solid #d3d3d3; background:#f7f7f7; }
+pre.codeoutput { padding:10px 11px; margin:0px 0px 20px; color:#4c4c4c; }
+pre.error { color:red; }
+
+@media print { pre.codeinput, pre.codeoutput { word-wrap:break-word; width:100%; } }
+
+span.keyword { color:#0000FF }
+span.comment { color:#228B22 }
+span.string { color:#A020F0 }
+span.untermstring { color:#B20000 }
+span.syscmd { color:#B28C00 }
+span.typesection { color:#A0522D }
+
+.footer { width:auto; padding:10px 0px; margin:25px 0px 0px; border-top:1px dotted #878787; font-size:0.8em; line-height:140%; font-style:italic; color:#878787; text-align:left; float:none; }
+.footer p { margin:0px; }
+.footer a { color:#878787; }
+.footer a:hover { color:#878787; text-decoration:underline; }
+.footer a:visited { color:#878787; }
+
+table th { padding:7px 5px; text-align:left; vertical-align:middle; border: 1px solid #d6d4d4; font-weight:bold; }
+table td { padding:7px 5px; text-align:left; vertical-align:top; border:1px solid #d6d4d4; }
+
+
+
+
+
+  </style></head><body><div class="content"><h2>Contents</h2><div><ul><li><a href="#1">clear recent data</a></li><li><a href="#2">Rectangular Window L1=10</a></li><li><a href="#3">Rectangular Window L2=50</a></li><li><a href="#4">Reectangular Window L3=101</a></li><li><a href="#5">Bartlett Window L1=10</a></li><li><a href="#6">Bartlett Window L2=50</a></li><li><a href="#7">Bartlett Window L3=101</a></li><li><a href="#8">Hannig Window L1=10</a></li><li><a href="#9">Hanning Window L2=50</a></li><li><a href="#10">Hanning Window L3=101</a></li><li><a href="#11">Hamming Window L1=10</a></li><li><a href="#12">Hamming Window L2=50</a></li><li><a href="#13">Hamming Window L3=101</a></li><li><a href="#14">Blackman Window L1=10</a></li><li><a href="#15">Blackman Window L2=50</a></li><li><a href="#16">Blackman Window L3=101</a></li><li><a href="#17">FUNCTIONS</a></li></ul></div><h2 id="1">clear recent data</h2><pre class="codeinput">clear,clc,close <span class="string">all</span>
+</pre><h2 id="2">Rectangular Window L1=10</h2><pre class="codeinput"> L1=10;
+ w1=myrect(L1);
+ figure()
+ subplot(2,1,1)
+ plot(w1)
+ ylim([0 1.5])
+ title(<span class="string">'rect L=10'</span>)
+ xlabel(<span class="string">'time'</span>)
+ ylabel(<span class="string">'amplitude'</span>)
+ [h,w] = freqz(w1,1,-pi:pi/1000:pi);
+ subplot(2,1,2)
+ plot(w/pi,10*log10(abs(h)))
+ title(<span class="string">'DTFT of window'</span>)
+ xlabel(<span class="string">'frequency(*pi rad)'</span>)
+ ylabel(<span class="string">'magnitude(dB)'</span>)
+</pre><img vspace="5" hspace="5" src="dspq3_01.png" alt=""> <h2 id="3">Rectangular Window L2=50</h2><pre class="codeinput"> L2=50;
+ w1=myrect(L2);
+ figure()
+ subplot(2,1,1)
+ plot(w1)
+ ylim([0 1.5])
+ title(<span class="string">'rect L=50'</span>)
+ xlabel(<span class="string">'time'</span>)
+ ylabel(<span class="string">'amplitude'</span>)
+ [h,w] = freqz(w1,1,-pi:pi/1000:pi);
+ subplot(2,1,2)
+ plot(w/pi,10*log10(abs(h)))
+ title(<span class="string">'DTFT of window'</span>)
+ xlabel(<span class="string">'frequency(*pi rad)'</span>)
+ ylabel(<span class="string">'magnitude(dB)'</span>)
+</pre><img vspace="5" hspace="5" src="dspq3_02.png" alt=""> <h2 id="4">Reectangular Window L3=101</h2><pre class="codeinput"> L3=101;
+ w1=myrect(L3);
+ figure()
+ subplot(2,1,1)
+ plot(w1)
+ title(<span class="string">'rect L=101'</span>)
+ xlabel(<span class="string">'time'</span>)
+ ylabel(<span class="string">'amplitude'</span>)
+ ylim([0 1.5])
+ [h,w] = freqz(w1,1,-pi:pi/1000:pi);
+ subplot(2,1,2)
+ plot(w/pi,10*log10(abs(h)))
+ title(<span class="string">'DTFT of window'</span>)
+ xlabel(<span class="string">'frequency(*pi rad)'</span>)
+ ylabel(<span class="string">'magnitude(dB)'</span>)
+</pre><img vspace="5" hspace="5" src="dspq3_03.png" alt=""> <h2 id="5">Bartlett Window L1=10</h2><pre class="codeinput"> <span class="comment">%L=10</span>
+ w2=mybartlett(L1);
+ figure()
+ subplot(2,1,1)
+ plot(w2)
+ title(<span class="string">'Bartlett L=10'</span>)
+ xlabel(<span class="string">'time'</span>)
+ ylabel(<span class="string">'amplitude'</span>)
+ [h,w] = freqz(w2,1,-pi:pi/1000:pi);
+ subplot(2,1,2)
+ plot(w/pi,10*log10(abs(h)))
+ title(<span class="string">'DTFT of window'</span>)
+ xlabel(<span class="string">'frequency(*pi rad)'</span>)
+ ylabel(<span class="string">'magnitude(db)'</span>)
+</pre><img vspace="5" hspace="5" src="dspq3_04.png" alt=""> <h2 id="6">Bartlett Window L2=50</h2><pre class="codeinput">  w2=mybartlett(L2);
+ figure()
+ subplot(2,1,1)
+ plot(w2)
+ title(<span class="string">'Bartlett L=50'</span>)
+ xlabel(<span class="string">'time'</span>)
+ ylabel(<span class="string">'amplitude'</span>)
+ [h,w] = freqz(w2,1,-pi:pi/1000:pi);
+ subplot(2,1,2)
+ plot(w/pi,10*log10(abs(h)))
+ title(<span class="string">'DTFT of window'</span>)
+ xlabel(<span class="string">'frequency(*pi rad)'</span>)
+ ylabel(<span class="string">'magnitude(dB)'</span>)
+</pre><img vspace="5" hspace="5" src="dspq3_05.png" alt=""> <h2 id="7">Bartlett Window L3=101</h2><pre class="codeinput"> w2=mybartlett2(L3);
+ figure()
+ subplot(2,1,1)
+ plot(w2)
+ title(<span class="string">'Bartlett L=101'</span>)
+ xlabel(<span class="string">'time'</span>)
+ ylabel(<span class="string">'amplitude'</span>)
+ [h,w] = freqz(w2,1,-pi:pi/1000:pi);
+ subplot(2,1,2)
+ plot(w/pi,10*log10(abs(h)))
+ title(<span class="string">'DTFT of window'</span>)
+ xlabel(<span class="string">'frequency(*pi rad)'</span>)
+ ylabel(<span class="string">'magnitude(dB)'</span>)
+</pre><img vspace="5" hspace="5" src="dspq3_06.png" alt=""> <h2 id="8">Hannig Window L1=10</h2><pre class="codeinput"> w3=myhanning(L1);
+ figure()
+ subplot(2,1,1)
+ plot(w3)
+ title(<span class="string">'Hanning L=10'</span>)
+ xlabel(<span class="string">'time'</span>)
+ ylabel(<span class="string">'amplitude'</span>)
+ [h,w] = freqz(w3,1,-pi:pi/1000:pi);
+ subplot(2,1,2)
+ plot(w/pi,10*log10(abs(h)))
+ title(<span class="string">'DTFT of window'</span>)
+ xlabel(<span class="string">'frequency(*pi rad)'</span>)
+ ylabel(<span class="string">'magnitude(dB)'</span>)
+</pre><img vspace="5" hspace="5" src="dspq3_07.png" alt=""> <h2 id="9">Hanning Window L2=50</h2><pre class="codeinput"> w3=myhanning(L2);
+ figure()
+ subplot(2,1,1)
+ plot(w3)
+ title(<span class="string">'Hanning L=50'</span>)
+ xlabel(<span class="string">'time'</span>)
+ ylabel(<span class="string">'amplitude'</span>)
+ [h,w] = freqz(w3,1,-pi:pi/1000:pi);
+ subplot(2,1,2)
+ plot(w/pi,10*log10(abs(h)))
+ title(<span class="string">'DTFT of window'</span>)
+ xlabel(<span class="string">'frequency(*pi rad)'</span>)
+ ylabel(<span class="string">'magnitude(dB)'</span>)
+</pre><img vspace="5" hspace="5" src="dspq3_08.png" alt=""> <h2 id="10">Hanning Window L3=101</h2><pre class="codeinput"> w3=myhanning(L3);
+ figure()
+ subplot(2,1,1)
+ plot(w3)
+ title(<span class="string">'Hanning L=101'</span>)
+ xlabel(<span class="string">'time'</span>)
+ ylabel(<span class="string">'amplitude'</span>)
+ [h,w] = freqz(w3,1,-pi:pi/1000:pi);
+ subplot(2,1,2)
+ plot(w/pi,10*log10(abs(h)))
+ title(<span class="string">'DTFT of window'</span>)
+ xlabel(<span class="string">'frequency(*pi rad)'</span>)
+ ylabel(<span class="string">'magnitude(dB)'</span>)
+</pre><img vspace="5" hspace="5" src="dspq3_09.png" alt=""> <h2 id="11">Hamming Window L1=10</h2><pre class="codeinput"> w4=myhamming(L1);
+ figure()
+ subplot(2,1,1)
+ plot(w4)
+ title(<span class="string">'Hamming L=10'</span>)
+ xlabel(<span class="string">'time'</span>)
+ ylabel(<span class="string">'amplitude'</span>)
+ [h,w] = freqz(w4,1,-pi:pi/1000:pi);
+ subplot(2,1,2)
+ plot(w/pi,10*log10(abs(h)))
+ title(<span class="string">'DTFT of window'</span>)
+ xlabel(<span class="string">'frequency(*pi rad)'</span>)
+ ylabel(<span class="string">'magnitude(dB)'</span>)
+</pre><img vspace="5" hspace="5" src="dspq3_10.png" alt=""> <h2 id="12">Hamming Window L2=50</h2><pre class="codeinput"> w4=myhamming(L2);
+ figure()
+ subplot(2,1,1)
+ plot(w4)
+ title(<span class="string">'Hamming L=50'</span>)
+ xlabel(<span class="string">'time'</span>)
+ ylabel(<span class="string">'amplitude'</span>)
+  [h,w] = freqz(w4,1,-pi:pi/1000:pi);
+ subplot(2,1,2)
+ plot(w/pi,10*log10(abs(h)))
+ title(<span class="string">'DTFT of window'</span>)
+ xlabel(<span class="string">'frequency(*pi rad)'</span>)
+ ylabel(<span class="string">'magnitude(dB)'</span>)
+</pre><img vspace="5" hspace="5" src="dspq3_11.png" alt=""> <h2 id="13">Hamming Window L3=101</h2><pre class="codeinput"> w4=myhamming(L3);
+ figure()
+ subplot(2,1,1)
+ plot(w4)
+ title(<span class="string">'Hamming L=101'</span>)
+ xlabel(<span class="string">'time'</span>)
+ ylabel(<span class="string">'amplitude'</span>)
+ [h,w] = freqz(w4,1,-pi:pi/1000:pi);
+ subplot(2,1,2)
+ plot(w/pi,10*log10(abs(h)))
+ title(<span class="string">'DTFT of window'</span>)
+ xlabel(<span class="string">'frequency(*pi rad)'</span>)
+ ylabel(<span class="string">'magnitude(dB)'</span>)
+</pre><img vspace="5" hspace="5" src="dspq3_12.png" alt=""> <h2 id="14">Blackman Window L1=10</h2><pre class="codeinput"> <span class="comment">%L1=10;</span>
+ w5=myblackman(L1);
+ figure()
+ subplot(2,1,1)
+ plot(w5)
+ title(<span class="string">'Blackman L=10'</span>)
+ xlabel(<span class="string">'time'</span>)
+ ylabel(<span class="string">'amplitude'</span>)
+ [h,w] = freqz(w5,1,-pi:pi/1000:pi);
+ subplot(2,1,2)
+ plot(w/pi,10*log10(abs(h)))
+ title(<span class="string">'DTFT of window'</span>)
+ xlabel(<span class="string">'frequency(*pi rad)'</span>)
+ ylabel(<span class="string">'magnitude(dB)'</span>)
+</pre><img vspace="5" hspace="5" src="dspq3_13.png" alt=""> <h2 id="15">Blackman Window L2=50</h2><pre class="codeinput"> w5=myblackman(L2);
+ figure()
+ subplot(2,1,1)
+ plot(w5)
+ title(<span class="string">'Blackman L=50'</span>)
+ xlabel(<span class="string">'time'</span>)
+ ylabel(<span class="string">'amplitude'</span>)
+ [h,w] = freqz(w5,1,-pi:pi/1000:pi);
+ subplot(2,1,2)
+ plot(w/pi,10*log10(abs(h)))
+ title(<span class="string">'DTFT of window'</span>)
+ xlabel(<span class="string">'frequency(*pi rad)'</span>)
+ ylabel(<span class="string">'magnitude(dB)'</span>)
+</pre><img vspace="5" hspace="5" src="dspq3_14.png" alt=""> <h2 id="16">Blackman Window L3=101</h2><pre class="codeinput"> w5=myblackman(L3);
+ figure()
+ subplot(2,1,1)
+ plot(w5)
+ title(<span class="string">'Blackman L=101'</span>)
+ xlabel(<span class="string">'time'</span>)
+ ylabel(<span class="string">'amplitude'</span>)
+ [h,w] = freqz(w5,1,-pi:pi/1000:pi);
+ subplot(2,1,2)
+ plot(w/pi,10*log10(abs(h)))
+ title(<span class="string">'DTFT of window'</span>)
+ xlabel(<span class="string">'frequency(*pi rad)'</span>)
+ ylabel(<span class="string">'magnitude(dB)'</span>)
+</pre><img vspace="5" hspace="5" src="dspq3_15.png" alt=""> <h2 id="17">FUNCTIONS</h2><pre class="codeinput"><span class="keyword">function</span> R = myrect(M)
+	R=zeros(0,M);
+   <span class="keyword">for</span> i=1:M
+		R(i)=1;
+   <span class="keyword">end</span>
+<span class="keyword">end</span>
+
+<span class="keyword">function</span> R=mybartlett(M)
+	R=zeros(0,M);
+    <span class="keyword">for</span> i=1:(M/2)
+		R(i)=2*i/M;
+    <span class="keyword">for</span> k=(M/2):M
+        R(k)=2-(2*k/M);
+    <span class="keyword">end</span>
+    <span class="keyword">end</span>
+<span class="keyword">end</span>
+
+<span class="keyword">function</span> R = myhanning(M)
+	R=zeros(0,M);
+	<span class="keyword">for</span> i=1:M
+		R(i)=0.5*(1-(cos(2*pi*i/(M-1))));
+	<span class="keyword">end</span>
+<span class="keyword">end</span>
+
+<span class="keyword">function</span> R = myhamming(M)
+	R=zeros(0,M);
+	<span class="keyword">for</span> i=1:M
+		R(i)=0.54-0.46*(cos(2*pi*i/(M-1)));
+	<span class="keyword">end</span>
+<span class="keyword">end</span>
+
+<span class="keyword">function</span> R = myblackman(M)
+	R=zeros(0,M);
+	<span class="keyword">for</span> i=1:M
+		R(i)=0.42-0.5*(cos(2*pi*i/(M-1)))+0.08*(cos(4*pi*i/(M-1)));
+	<span class="keyword">end</span>
+<span class="keyword">end</span>
+<span class="comment">%for odd M</span>
+<span class="keyword">function</span> R=mybartlett2(M)
+	 R=zeros(0,M);
+     <span class="keyword">for</span> i=1:((M+1)/2)
+		 R(i)=(2*i/M);
+     <span class="keyword">for</span> k=((M+1)/2):M
+         R(k)=2-(2*k/M);
+     <span class="keyword">end</span>
+     <span class="keyword">end</span>
+<span class="keyword">end</span>
+</pre><p class="footer"><br><a href="https://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2021b</a><br></p></div><!--
+##### SOURCE BEGIN #####
+%% clear recent data 
+clear,clc,close all
+%%  Rectangular Window L1=10
+ L1=10;
+ w1=myrect(L1);
+ figure()
+ subplot(2,1,1)
+ plot(w1)
+ ylim([0 1.5])
+ title('rect L=10')
+ xlabel('time')
+ ylabel('amplitude')
+ [h,w] = freqz(w1,1,-pi:pi/1000:pi);
+ subplot(2,1,2)
+ plot(w/pi,10*log10(abs(h)))
+ title('DTFT of window')
+ xlabel('frequency(*pi rad)')
+ ylabel('magnitude(dB)')
+ %% Rectangular Window L2=50
+ L2=50;
+ w1=myrect(L2);
+ figure()
+ subplot(2,1,1)
+ plot(w1)
+ ylim([0 1.5])
+ title('rect L=50')
+ xlabel('time')
+ ylabel('amplitude')
+ [h,w] = freqz(w1,1,-pi:pi/1000:pi);
+ subplot(2,1,2)
+ plot(w/pi,10*log10(abs(h)))
+ title('DTFT of window')
+ xlabel('frequency(*pi rad)')
+ ylabel('magnitude(dB)')
+ %% Reectangular Window L3=101
+ L3=101;
+ w1=myrect(L3);
+ figure()
+ subplot(2,1,1)
+ plot(w1)
+ title('rect L=101')
+ xlabel('time')
+ ylabel('amplitude')
+ ylim([0 1.5])
+ [h,w] = freqz(w1,1,-pi:pi/1000:pi);
+ subplot(2,1,2)
+ plot(w/pi,10*log10(abs(h)))
+ title('DTFT of window')
+ xlabel('frequency(*pi rad)')
+ ylabel('magnitude(dB)')
+ %% Bartlett Window L1=10
+ %L=10
+ w2=mybartlett(L1);
+ figure()
+ subplot(2,1,1)
+ plot(w2)
+ title('Bartlett L=10')
+ xlabel('time')
+ ylabel('amplitude')
+ [h,w] = freqz(w2,1,-pi:pi/1000:pi);
+ subplot(2,1,2)
+ plot(w/pi,10*log10(abs(h)))
+ title('DTFT of window')
+ xlabel('frequency(*pi rad)')
+ ylabel('magnitude(db)')
+ %% Bartlett Window L2=50
+  w2=mybartlett(L2);
+ figure()
+ subplot(2,1,1)
+ plot(w2)
+ title('Bartlett L=50')
+ xlabel('time')
+ ylabel('amplitude')
+ [h,w] = freqz(w2,1,-pi:pi/1000:pi);
+ subplot(2,1,2)
+ plot(w/pi,10*log10(abs(h)))
+ title('DTFT of window')
+ xlabel('frequency(*pi rad)')
+ ylabel('magnitude(dB)')
+ %% Bartlett Window L3=101
+ w2=mybartlett2(L3);
+ figure()
+ subplot(2,1,1)
+ plot(w2)
+ title('Bartlett L=101')
+ xlabel('time')
+ ylabel('amplitude')
+ [h,w] = freqz(w2,1,-pi:pi/1000:pi);
+ subplot(2,1,2)
+ plot(w/pi,10*log10(abs(h)))
+ title('DTFT of window')
+ xlabel('frequency(*pi rad)')
+ ylabel('magnitude(dB)')
+ %% Hannig Window L1=10
+ w3=myhanning(L1);
+ figure()
+ subplot(2,1,1)
+ plot(w3)
+ title('Hanning L=10')
+ xlabel('time')
+ ylabel('amplitude')
+ [h,w] = freqz(w3,1,-pi:pi/1000:pi);
+ subplot(2,1,2)
+ plot(w/pi,10*log10(abs(h)))
+ title('DTFT of window')
+ xlabel('frequency(*pi rad)')
+ ylabel('magnitude(dB)')
+ %% Hanning Window L2=50
+ w3=myhanning(L2);
+ figure()
+ subplot(2,1,1)
+ plot(w3)
+ title('Hanning L=50')
+ xlabel('time')
+ ylabel('amplitude')
+ [h,w] = freqz(w3,1,-pi:pi/1000:pi);
+ subplot(2,1,2)
+ plot(w/pi,10*log10(abs(h)))
+ title('DTFT of window')
+ xlabel('frequency(*pi rad)')
+ ylabel('magnitude(dB)')
+ %% Hanning Window L3=101
+ w3=myhanning(L3);
+ figure()
+ subplot(2,1,1)
+ plot(w3)
+ title('Hanning L=101')
+ xlabel('time')
+ ylabel('amplitude')
+ [h,w] = freqz(w3,1,-pi:pi/1000:pi);
+ subplot(2,1,2)
+ plot(w/pi,10*log10(abs(h)))
+ title('DTFT of window')
+ xlabel('frequency(*pi rad)')
+ ylabel('magnitude(dB)')
+ %% Hamming Window L1=10
+ w4=myhamming(L1);
+ figure()
+ subplot(2,1,1)
+ plot(w4)
+ title('Hamming L=10')
+ xlabel('time')
+ ylabel('amplitude')
+ [h,w] = freqz(w4,1,-pi:pi/1000:pi);
+ subplot(2,1,2)
+ plot(w/pi,10*log10(abs(h)))
+ title('DTFT of window')
+ xlabel('frequency(*pi rad)')
+ ylabel('magnitude(dB)')
+ %% Hamming Window L2=50
+ w4=myhamming(L2);
+ figure()
+ subplot(2,1,1)
+ plot(w4)
+ title('Hamming L=50')
+ xlabel('time')
+ ylabel('amplitude')
+  [h,w] = freqz(w4,1,-pi:pi/1000:pi);
+ subplot(2,1,2)
+ plot(w/pi,10*log10(abs(h)))
+ title('DTFT of window')
+ xlabel('frequency(*pi rad)')
+ ylabel('magnitude(dB)')
+  %% Hamming Window L3=101
+ w4=myhamming(L3);
+ figure()
+ subplot(2,1,1)
+ plot(w4)
+ title('Hamming L=101')
+ xlabel('time')
+ ylabel('amplitude')
+ [h,w] = freqz(w4,1,-pi:pi/1000:pi);
+ subplot(2,1,2)
+ plot(w/pi,10*log10(abs(h)))
+ title('DTFT of window')
+ xlabel('frequency(*pi rad)')
+ ylabel('magnitude(dB)')
+ %% Blackman Window L1=10
+ %L1=10;
+ w5=myblackman(L1);
+ figure()
+ subplot(2,1,1)
+ plot(w5)
+ title('Blackman L=10')
+ xlabel('time')
+ ylabel('amplitude')
+ [h,w] = freqz(w5,1,-pi:pi/1000:pi);
+ subplot(2,1,2)
+ plot(w/pi,10*log10(abs(h)))
+ title('DTFT of window')
+ xlabel('frequency(*pi rad)')
+ ylabel('magnitude(dB)')
+ %% Blackman Window L2=50
+ w5=myblackman(L2);
+ figure()
+ subplot(2,1,1)
+ plot(w5)
+ title('Blackman L=50')
+ xlabel('time')
+ ylabel('amplitude')
+ [h,w] = freqz(w5,1,-pi:pi/1000:pi);
+ subplot(2,1,2)
+ plot(w/pi,10*log10(abs(h)))
+ title('DTFT of window')
+ xlabel('frequency(*pi rad)')
+ ylabel('magnitude(dB)')
+ %% Blackman Window L3=101
+ w5=myblackman(L3);
+ figure()
+ subplot(2,1,1)
+ plot(w5)
+ title('Blackman L=101')
+ xlabel('time')
+ ylabel('amplitude')
+ [h,w] = freqz(w5,1,-pi:pi/1000:pi);
+ subplot(2,1,2)
+ plot(w/pi,10*log10(abs(h)))
+ title('DTFT of window')
+ xlabel('frequency(*pi rad)')
+ ylabel('magnitude(dB)')
+ %% FUNCTIONS
+function R = myrect(M)
+	R=zeros(0,M);
+   for i=1:M
+		R(i)=1;
+   end
+end
+
+function R=mybartlett(M)
+	R=zeros(0,M);
+    for i=1:(M/2)
+		R(i)=2*i/M;
+    for k=(M/2):M
+        R(k)=2-(2*k/M);
+    end   
+    end
+end
+
+function R = myhanning(M)
+	R=zeros(0,M);
+	for i=1:M
+		R(i)=0.5*(1-(cos(2*pi*i/(M-1))));
+	end
+end
+
+function R = myhamming(M)
+	R=zeros(0,M);
+	for i=1:M
+		R(i)=0.54-0.46*(cos(2*pi*i/(M-1)));
+	end
+end
+
+function R = myblackman(M)
+	R=zeros(0,M);
+	for i=1:M
+		R(i)=0.42-0.5*(cos(2*pi*i/(M-1)))+0.08*(cos(4*pi*i/(M-1)));
+	end
+end
+%for odd M 
+function R=mybartlett2(M)
+	 R=zeros(0,M);
+     for i=1:((M+1)/2)
+		 R(i)=(2*i/M);
+     for k=((M+1)/2):M
+         R(k)=2-(2*k/M);
+     end   
+     end
+end
+ 
+
+##### SOURCE END #####
+--></body></html>

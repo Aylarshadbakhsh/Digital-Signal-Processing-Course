@@ -1,0 +1,381 @@
+
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   <!--
+This HTML was auto-generated from MATLAB code.
+To make changes, update the MATLAB code and republish this document.
+      --><title>HW3Q1_9723301</title><meta name="generator" content="MATLAB 9.11"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2022-01-07"><meta name="DC.source" content="HW3Q1_9723301.m"><style type="text/css">
+html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
+
+html { min-height:100%; margin-bottom:1px; }
+html body { height:100%; margin:0px; font-family:Arial, Helvetica, sans-serif; font-size:10px; color:#000; line-height:140%; background:#fff none; overflow-y:scroll; }
+html body td { vertical-align:top; text-align:left; }
+
+h1 { padding:0px; margin:0px 0px 25px; font-family:Arial, Helvetica, sans-serif; font-size:1.5em; color:#d55000; line-height:100%; font-weight:normal; }
+h2 { padding:0px; margin:0px 0px 8px; font-family:Arial, Helvetica, sans-serif; font-size:1.2em; color:#000; font-weight:bold; line-height:140%; border-bottom:1px solid #d6d4d4; display:block; }
+h3 { padding:0px; margin:0px 0px 5px; font-family:Arial, Helvetica, sans-serif; font-size:1.1em; color:#000; font-weight:bold; line-height:140%; }
+
+a { color:#005fce; text-decoration:none; }
+a:hover { color:#005fce; text-decoration:underline; }
+a:visited { color:#004aa0; text-decoration:none; }
+
+p { padding:0px; margin:0px 0px 20px; }
+img { padding:0px; margin:0px 0px 20px; border:none; }
+p img, pre img, tt img, li img, h1 img, h2 img { margin-bottom:0px; }
+
+ul { padding:0px; margin:0px 0px 20px 23px; list-style:square; }
+ul li { padding:0px; margin:0px 0px 7px 0px; }
+ul li ul { padding:5px 0px 0px; margin:0px 0px 7px 23px; }
+ul li ol li { list-style:decimal; }
+ol { padding:0px; margin:0px 0px 20px 0px; list-style:decimal; }
+ol li { padding:0px; margin:0px 0px 7px 23px; list-style-type:decimal; }
+ol li ol { padding:5px 0px 0px; margin:0px 0px 7px 0px; }
+ol li ol li { list-style-type:lower-alpha; }
+ol li ul { padding-top:7px; }
+ol li ul li { list-style:square; }
+
+.content { font-size:1.2em; line-height:140%; padding: 20px; }
+
+pre, code { font-size:12px; }
+tt { font-size: 1.2em; }
+pre { margin:0px 0px 20px; }
+pre.codeinput { padding:10px; border:1px solid #d3d3d3; background:#f7f7f7; }
+pre.codeoutput { padding:10px 11px; margin:0px 0px 20px; color:#4c4c4c; }
+pre.error { color:red; }
+
+@media print { pre.codeinput, pre.codeoutput { word-wrap:break-word; width:100%; } }
+
+span.keyword { color:#0000FF }
+span.comment { color:#228B22 }
+span.string { color:#A020F0 }
+span.untermstring { color:#B20000 }
+span.syscmd { color:#B28C00 }
+span.typesection { color:#A0522D }
+
+.footer { width:auto; padding:10px 0px; margin:25px 0px 0px; border-top:1px dotted #878787; font-size:0.8em; line-height:140%; font-style:italic; color:#878787; text-align:left; float:none; }
+.footer p { margin:0px; }
+.footer a { color:#878787; }
+.footer a:hover { color:#878787; text-decoration:underline; }
+.footer a:visited { color:#878787; }
+
+table th { padding:7px 5px; text-align:left; vertical-align:middle; border: 1px solid #d6d4d4; font-weight:bold; }
+table td { padding:7px 5px; text-align:left; vertical-align:top; border:1px solid #d6d4d4; }
+
+
+
+
+
+  </style></head><body><div class="content"><h2>Contents</h2><div><ul><li><a href="#1">clear data</a></li><li><a href="#2">part a Blackman window</a></li><li><a href="#3">part b kaiser window</a></li><li><a href="#4">part c filtering with blackman</a></li><li><a href="#5">part c filtering with kaiser</a></li><li><a href="#6">Rectangular Window</a></li><li><a href="#7">function</a></li></ul></div><h2 id="1">clear data</h2><pre class="codeinput">close <span class="string">all</span>
+clc
+clear
+</pre><h2 id="2">part a Blackman window</h2><pre class="codeinput">wp = 0.2*pi;  <span class="comment">% digital Passband freq</span>
+ws = 0.4*pi;  <span class="comment">% digital Stopband freq</span>
+deltaw = ws - wp;
+M = ceil(12*pi/deltaw)+1 ;
+disp(<span class="string">'length of  blackman window '</span>)
+disp(M)
+n=0:1:M-1;
+wc = (ws+wp)/2; <span class="comment">% Ideal LPF cutoff frequency</span>
+hd = ideal_lp(wc,M);
+w_black = (blackman(M))';
+h1 = hd .* w_black;
+[h,w]=freqz(h1,1,1000,<span class="string">'whole'</span>);
+h = (h(1:1:501))';
+w = (w(1:1:501))';
+mag=abs(h);
+db = 20*log10((mag+eps)/max(mag));
+delta_w = 2*pi/1000;
+Rp = -(min(db(1:1:wp/delta_w+1))); <span class="comment">% Actual Passband Ripple</span>
+disp(<span class="string">'actual RP OF Blackman window='</span>)
+disp(Rp)
+As = -round(max(db(ws/delta_w+1:1:501))); <span class="comment">% Min Stopband attenuation</span>
+disp(<span class="string">' stopband attenuation of Blackman window'</span>)
+disp(As)
+figure()
+subplot(2,2,1); stem(n,hd); title(<span class="string">'Ideal Impulse Response'</span>)
+axis([0 M-1 -0.1 0.3]); xlabel(<span class="string">'time'</span>); ylabel(<span class="string">'hd(n)'</span>)
+subplot(2,2,2); stem(n,w_black);title(<span class="string">'Blackman Window'</span>)
+axis([0 M-1 0 1.1]); xlabel(<span class="string">'time'</span>); ylabel(<span class="string">'w(n)'</span>)
+subplot(2,2,3); stem(n,h1);title(<span class="string">'Actual Impulse Response'</span>)
+axis([0 M-1 -0.1 0.3]); xlabel(<span class="string">'time'</span>); ylabel(<span class="string">'h(n)'</span>)
+subplot(2,2,4); plot(w/pi,db);title(<span class="string">'frequency Response db'</span>);grid
+axis([0 1 -100 10]); xlabel(<span class="string">'frequency *pi'</span>); ylabel(<span class="string">'magnitude db'</span>)
+</pre><pre class="codeoutput">length of  blackman window 
+    61
+
+</pre><img vspace="5" hspace="5" src="HW3Q1_9723301_01.png" alt=""> <h2 id="3">part b kaiser window</h2><pre class="codeinput"> wp = 0.2*pi;
+ ws = 0.4*pi;
+ As = 60;
+ deltaw = ws - wp;
+ M = ceil((As-7.95)/(2.285*deltaw))+1;
+ disp(<span class="string">' length of kaiser window ='</span>)
+ disp(M)
+ n=0:1:M-1;
+ beta = 0.1102*(As-8.7);
+ disp(<span class="string">'beta'</span>)
+ disp(beta)
+ wc = (ws+wp)/2; hd = ideal_lp(wc,M);
+ w_kai = (kaiser(M,beta))';
+ h2 = hd .* w_kai;
+[h11,w11]=freqz(h2,1,1000,<span class="string">'whole'</span>);
+h11 = (h11(1:1:501))';
+w11 = (w11(1:1:501))';
+mag1=abs(h11);
+db1 = 20*log10((mag1+eps)/max(mag1));
+delta_w = 2*pi/1000;
+As = -round(max(db1(ws/delta_w+1:1:501))); <span class="comment">% Min Stopband Attenuation</span>
+figure()
+subplot(2,2,1); stem(n,hd); title(<span class="string">'Ideal Impulse Response'</span>)
+axis([0 M-1 -0.1 0.3]); xlabel(<span class="string">'time'</span>); ylabel(<span class="string">'hd(n)'</span>)
+subplot(2,2,2); stem(n,w_kai);title(<span class="string">'Kaiser Window'</span>)
+axis([0 M-1 0 1.1]); xlabel(<span class="string">'time'</span>); ylabel(<span class="string">'w(n)'</span>)
+subplot(2,2,3); stem(n,h2);title(<span class="string">'Actual Impulse Response'</span>)
+axis([0 M-1 -0.1 0.3]); xlabel(<span class="string">'time'</span>); ylabel(<span class="string">'h(n)'</span>)
+subplot(2,2,4);plot(w11/pi,db1);title(<span class="string">'frequency Response in dB'</span>);grid
+axis([0 1 -100 10]); xlabel(<span class="string">'frequency in pi units'</span>); ylabel(<span class="string">'mgnitude'</span>)
+</pre><pre class="codeoutput"> length of kaiser window =
+    38
+
+beta
+    5.6533
+
+</pre><img vspace="5" hspace="5" src="HW3Q1_9723301_02.png" alt=""> <h2 id="4">part c filtering with blackman</h2><pre class="codeinput">[x_m,fs_m] = audioread(<span class="string">'HW3_Q1_multi_tone.wav'</span>);
+time_m = 0:1/fs_m:length(x_m)/fs_m-1/fs_m;
+xfilter1=filter(h1,1,x_m);
+[mag2,w2]=freqz(xfilter1,1,1000,<span class="string">'whole'</span>);
+[mag3,w3]=freqz(x_m,1,1000,<span class="string">'whole'</span>);
+mag2 = (mag2(1:1:501))';
+w2 = (w2(1:1:501))';
+mag3 = (mag3(1:1:501))';
+w3 = (w3(1:1:501))';
+figure()
+subplot(2,1,1)
+plot(w2/pi,(abs(mag2)));title(<span class="string">'frequency Response of output(Blackman window) '</span>);
+xlabel(<span class="string">'frequency'</span>)
+ylabel(<span class="string">'magnitude'</span>)
+subplot(2,1,2)
+plot(w3/pi,abs(mag3));title(<span class="string">'frequency Response of input '</span>)
+xlabel(<span class="string">'frequency'</span>)
+ylabel(<span class="string">'magnitude'</span>)
+figure()
+subplot(2,1,1)
+plot(w2/pi,abs(mag2));title(<span class="string">'frequency Response of output(Blackman window) '</span>);
+xlabel(<span class="string">'frequency'</span>)
+ylabel(<span class="string">'magnitude'</span>)
+subplot(2,1,2)
+plot(w2/pi,angle(mag2));title(<span class="string">'frequency Response of output(Blackkman window)'</span>)
+xlabel(<span class="string">'frequency'</span>)
+ylabel(<span class="string">'phase'</span>)
+</pre><img vspace="5" hspace="5" src="HW3Q1_9723301_03.png" alt=""> <img vspace="5" hspace="5" src="HW3Q1_9723301_04.png" alt=""> <h2 id="5">part c filtering with kaiser</h2><pre class="codeinput">xfilter2=filter(h2,1,x_m);
+[mag4,w4]=freqz(xfilter2,1,1000,<span class="string">'whole'</span>);
+mag4 = (mag4(1:1:501))';
+w4 = (w4(1:1:501))';
+figure()
+subplot(2,1,1)
+plot(w4/pi,(abs(mag4)));title(<span class="string">' frequency Response of output(kaiser window) '</span>)
+xlabel(<span class="string">'frequency'</span>)
+ylabel(<span class="string">'magnitude'</span>)
+subplot(2,1,2)
+plot(w3/pi,abs(mag3));title(<span class="string">'frequnecy Response of input '</span>)
+xlabel(<span class="string">'frequency'</span>)
+ylabel(<span class="string">'magnitude'</span>)
+figure()
+subplot(2,1,1)
+plot(w4/pi,abs(mag4));title(<span class="string">'frequency Response of output(kaiser window) '</span>);
+xlabel(<span class="string">'frequency'</span>)
+ylabel(<span class="string">'magnitude'</span>)
+subplot(2,1,2)
+plot(w4/pi,angle(mag4));title(<span class="string">'frequency Response of output(kaiser window)'</span>)
+xlabel(<span class="string">'frequency'</span>)
+ylabel(<span class="string">'phase'</span>)
+</pre><img vspace="5" hspace="5" src="HW3Q1_9723301_05.png" alt=""> <img vspace="5" hspace="5" src="HW3Q1_9723301_06.png" alt=""> <h2 id="6">Rectangular Window</h2><pre class="codeinput">wp1 = 0.2*pi;
+ws = 0.4*pi;
+deltaw = ws - wp1;
+M = ceil(4*pi/deltaw) ;
+n=0:1:M-1;
+wc = (ws+wp1)/2;
+hd = ideal_lp(wc,M);
+w_rect = (rectwin(M))';
+h1rect = hd .* w_rect;
+xfilterr=filter(h1rect,1,x_m);
+[hrect,wrect]=freqz(xfilterr,1,1000,<span class="string">'whole'</span>);
+hrect = (hrect(1:1:501))';
+wrect = (wrect(1:1:501))';
+hrect=abs(hrect);
+figure()
+subplot(2,1,1)
+plot(wrect/pi,(hrect));
+title(<span class="string">' frequency Response of output(Rectangular window) '</span>)
+xlabel(<span class="string">'frequency'</span>)
+ylabel(<span class="string">'magnitude'</span>)
+subplot(2,1,2)
+plot(w3/pi,abs(mag3));title(<span class="string">'frequnecy Response of input '</span>)
+xlabel(<span class="string">'frequency'</span>)
+ylabel(<span class="string">'magnitude'</span>)
+</pre><h2 id="7">function</h2><pre class="codeinput"><span class="keyword">function</span> hd = ideal_lp(wc,M)
+alpha = (M-1)/2; n = 0:1:(M-1);
+m=n- alpha; fc = wc/pi; hd = fc*sinc(fc*m);
+<span class="keyword">end</span>
+</pre><pre class="codeoutput">actual RP OF Blackman window=
+    0.0026
+
+ stopband attenuation of Blackman window
+    75
+
+</pre><p class="footer"><br><a href="https://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2021b</a><br></p></div><!--
+##### SOURCE BEGIN #####
+%% clear data
+close all
+clc
+clear
+%%  part a Blackman window  
+wp = 0.2*pi;  % digital Passband freq 
+ws = 0.4*pi;  % digital Stopband freq 
+deltaw = ws - wp;
+M = ceil(12*pi/deltaw)+1 ;
+disp('length of  blackman window ')
+disp(M)
+n=0:1:M-1;
+wc = (ws+wp)/2; % Ideal LPF cutoff frequency
+hd = ideal_lp(wc,M);
+w_black = (blackman(M))'; 
+h1 = hd .* w_black;
+[h,w]=freqz(h1,1,1000,'whole');
+h = (h(1:1:501))';
+w = (w(1:1:501))';
+mag=abs(h);
+db = 20*log10((mag+eps)/max(mag));
+delta_w = 2*pi/1000;
+Rp = -(min(db(1:1:wp/delta_w+1))); % Actual Passband Ripple
+disp('actual RP OF Blackman window=')
+disp(Rp)
+As = -round(max(db(ws/delta_w+1:1:501))); % Min Stopband attenuation
+disp(' stopband attenuation of Blackman window')
+disp(As)
+figure()
+subplot(2,2,1); stem(n,hd); title('Ideal Impulse Response')
+axis([0 M-1 -0.1 0.3]); xlabel('time'); ylabel('hd(n)')
+subplot(2,2,2); stem(n,w_black);title('Blackman Window')
+axis([0 M-1 0 1.1]); xlabel('time'); ylabel('w(n)')
+subplot(2,2,3); stem(n,h1);title('Actual Impulse Response')
+axis([0 M-1 -0.1 0.3]); xlabel('time'); ylabel('h(n)')
+subplot(2,2,4); plot(w/pi,db);title('frequency Response db');grid
+axis([0 1 -100 10]); xlabel('frequency *pi'); ylabel('magnitude db')
+ %% part b kaiser window
+ wp = 0.2*pi;
+ ws = 0.4*pi; 
+ As = 60; 
+ deltaw = ws - wp;
+ M = ceil((As-7.95)/(2.285*deltaw))+1;
+ disp(' length of kaiser window =')
+ disp(M)
+ n=0:1:M-1; 
+ beta = 0.1102*(As-8.7);
+ disp('beta')
+ disp(beta)
+ wc = (ws+wp)/2; hd = ideal_lp(wc,M);
+ w_kai = (kaiser(M,beta))';
+ h2 = hd .* w_kai;
+[h11,w11]=freqz(h2,1,1000,'whole');
+h11 = (h11(1:1:501))';
+w11 = (w11(1:1:501))';
+mag1=abs(h11);
+db1 = 20*log10((mag1+eps)/max(mag1));
+delta_w = 2*pi/1000;
+As = -round(max(db1(ws/delta_w+1:1:501))); % Min Stopband Attenuation
+figure()
+subplot(2,2,1); stem(n,hd); title('Ideal Impulse Response')
+axis([0 M-1 -0.1 0.3]); xlabel('time'); ylabel('hd(n)')
+subplot(2,2,2); stem(n,w_kai);title('Kaiser Window')
+axis([0 M-1 0 1.1]); xlabel('time'); ylabel('w(n)')
+subplot(2,2,3); stem(n,h2);title('Actual Impulse Response')
+axis([0 M-1 -0.1 0.3]); xlabel('time'); ylabel('h(n)')
+subplot(2,2,4);plot(w11/pi,db1);title('frequency Response in dB');grid
+axis([0 1 -100 10]); xlabel('frequency in pi units'); ylabel('mgnitude')
+%% part c filtering with blackman
+[x_m,fs_m] = audioread('HW3_Q1_multi_tone.wav');
+time_m = 0:1/fs_m:length(x_m)/fs_m-1/fs_m;
+xfilter1=filter(h1,1,x_m);
+[mag2,w2]=freqz(xfilter1,1,1000,'whole');
+[mag3,w3]=freqz(x_m,1,1000,'whole');
+mag2 = (mag2(1:1:501))'; 
+w2 = (w2(1:1:501))';
+mag3 = (mag3(1:1:501))';
+w3 = (w3(1:1:501))';
+figure()
+subplot(2,1,1)
+plot(w2/pi,(abs(mag2)));title('frequency Response of output(Blackman window) ');
+xlabel('frequency')
+ylabel('magnitude')
+subplot(2,1,2)
+plot(w3/pi,abs(mag3));title('frequency Response of input ')
+xlabel('frequency')
+ylabel('magnitude')
+figure()
+subplot(2,1,1)
+plot(w2/pi,abs(mag2));title('frequency Response of output(Blackman window) ');
+xlabel('frequency')
+ylabel('magnitude')
+subplot(2,1,2)
+plot(w2/pi,angle(mag2));title('frequency Response of output(Blackkman window)')
+xlabel('frequency')
+ylabel('phase')
+ %% part c filtering with kaiser 
+xfilter2=filter(h2,1,x_m);
+[mag4,w4]=freqz(xfilter2,1,1000,'whole');
+mag4 = (mag4(1:1:501))'; 
+w4 = (w4(1:1:501))';
+figure()
+subplot(2,1,1)
+plot(w4/pi,(abs(mag4)));title(' frequency Response of output(kaiser window) ')
+xlabel('frequency')
+ylabel('magnitude')
+subplot(2,1,2)
+plot(w3/pi,abs(mag3));title('frequnecy Response of input ')
+xlabel('frequency')
+ylabel('magnitude')
+figure()
+subplot(2,1,1)
+plot(w4/pi,abs(mag4));title('frequency Response of output(kaiser window) ');
+xlabel('frequency')
+ylabel('magnitude')
+subplot(2,1,2)
+plot(w4/pi,angle(mag4));title('frequency Response of output(kaiser window)')
+xlabel('frequency')
+ylabel('phase')
+ %% Rectangular Window
+wp1 = 0.2*pi;
+ws = 0.4*pi; 
+deltaw = ws - wp1;
+M = ceil(4*pi/deltaw) ;
+n=0:1:M-1;
+wc = (ws+wp1)/2; 
+hd = ideal_lp(wc,M);
+w_rect = (rectwin(M))'; 
+h1rect = hd .* w_rect;
+xfilterr=filter(h1rect,1,x_m);
+[hrect,wrect]=freqz(xfilterr,1,1000,'whole');
+hrect = (hrect(1:1:501))'; 
+wrect = (wrect(1:1:501))';
+hrect=abs(hrect);
+figure()
+subplot(2,1,1)
+plot(wrect/pi,(hrect));
+title(' frequency Response of output(Rectangular window) ')
+xlabel('frequency')
+ylabel('magnitude')
+subplot(2,1,2)
+plot(w3/pi,abs(mag3));title('frequnecy Response of input ')
+xlabel('frequency')
+ylabel('magnitude')
+%% function
+function hd = ideal_lp(wc,M)
+alpha = (M-1)/2; n = 0:1:(M-1);
+m=n- alpha; fc = wc/pi; hd = fc*sinc(fc*m);
+end
+
+
+##### SOURCE END #####
+--></body></html>
